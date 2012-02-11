@@ -8,9 +8,9 @@ import com.google.android.maps.GeoPoint;
 
 public class HailLocationListener implements LocationListener {
 
-	private Hail hail;
+	private HailActivity hail;
 
-	public HailLocationListener(Hail hail) {
+	public HailLocationListener(HailActivity hail) {
 		super();
 		this.hail = hail;
 	}
