@@ -59,7 +59,8 @@ public class HailCommunicator {
 					qparams.add(new BasicNameValuePair("location", "{latitude:"
 							+ location.getLatitudeE6() + ",longitude:"
 							+ location.getLongitudeE6() + "}"));
-					URI uri = URIUtils.createURI("http", "10.0.1.4", 8080,
+					URI uri = URIUtils.createURI("http",
+							"www.thanksforhavingsexwithme.com", 8080,
 							"/hailyes/services",
 							URLEncodedUtils.format(qparams, "UTF-8"), null);
 					HttpGet get = new HttpGet(uri);

@@ -65,7 +65,7 @@ public class HailActivity extends MapActivity {
 		mapOverlays.add(itemizedoverlay);
 
 		// Set the default zoom on the map
-		mapController.setZoom(13);
+		mapController.setZoom(16);
 
 		// Get the current location in start-up
 		GeoPoint initialLocation = getLastKnownGeoPoint();
