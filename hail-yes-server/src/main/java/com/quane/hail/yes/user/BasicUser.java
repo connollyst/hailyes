@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import com.quane.hail.yes.HailLocation;
 
-public abstract class AbstractUser {
+public class BasicUser {
 
 	private UUID id;
 	private HailLocation location;
-	private List<AbstractUser> neighbors;
+	private List<BasicUser> neighbors;
 
 	public UUID getId() {
 		return id;
@@ -27,11 +27,11 @@ public abstract class AbstractUser {
 		this.location = location;
 	}
 
-	public List<AbstractUser> getNeighbors() {
+	public List<BasicUser> getNeighbors() {
 		return neighbors;
 	}
 
-	public void setNeighbors(List<AbstractUser> neighbors) {
+	public void setNeighbors(List<BasicUser> neighbors) {
 		this.neighbors = neighbors;
 	}
 

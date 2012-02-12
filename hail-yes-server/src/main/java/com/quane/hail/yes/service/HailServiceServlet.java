@@ -18,7 +18,7 @@ import com.quane.hail.yes.data.HailDAO;
 import com.quane.hail.yes.exception.HailYesException;
 import com.quane.hail.yes.exception.MissingLocationException;
 import com.quane.hail.yes.exception.MissingUserException;
-import com.quane.hail.yes.user.AbstractUser;
+import com.quane.hail.yes.user.BasicUser;
 
 /**
  * The single access point for clients to communicate with the server.<br/>
@@ -61,7 +61,7 @@ public class HailServiceServlet extends HttpServlet {
 		try {
 			logger.info("Getting location");
 			HailLocation location = getLocationFromRequest(request);
-			List<AbstractUser> users = HailDAO.getUsersNearLocation(location);
+			List<BasicUser> users = HailDAO.getUsersNearLocation(location);
 			String jsonUsers = gson.toJson(users);
 			writeResponse(response, jsonUsers);
 		} catch (HailYesException hye) {
@@ -79,9 +79,9 @@ public class HailServiceServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doPut called");
 		try {
-			AbstractUser user = getUserFromRequest(request);
+			BasicUser user = getUserFromRequest(request);
 			user = HailDAO.saveUserLocation(user);
-			String jsonUser = gson.toJson(user, AbstractUser.class);
+			String jsonUser = gson.toJson(user, BasicUser.class);
 			writeResponse(response, jsonUser);
 		} catch (HailYesException hye) {
 			throw new ServletException(hye);
@@ -98,7 +98,7 @@ public class HailServiceServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doDelete called");
 		try {
-			AbstractUser user = getUserFromRequest(request);
+			BasicUser user = getUserFromRequest(request);
 			HailDAO.removeUserLocation(user);
 			// no response necessary
 		} catch (HailYesException hye) {
@@ -113,7 +113,7 @@ public class HailServiceServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private AbstractUser getUserFromRequest(HttpServletRequest request)
+	private BasicUser getUserFromRequest(HttpServletRequest request)
 			throws MissingUserException {
 		String jsonLocation = request.getParameter(REQUEST_PARAMETER_USER);
 		if (jsonLocation == null) {
@@ -121,8 +121,8 @@ public class HailServiceServlet extends HttpServlet {
 					"Request is missing parameter named '"
 							+ REQUEST_PARAMETER_USER + "'!");
 		}
-		logger.info("request.location: " + jsonLocation);
-		return gson.fromJson(jsonLocation, AbstractUser.class);
+		logger.info("request.user: " + jsonLocation);
+		return gson.fromJson(jsonLocation, BasicUser.class);
 	}
 
 	/**
