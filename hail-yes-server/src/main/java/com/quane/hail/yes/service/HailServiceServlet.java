@@ -29,6 +29,8 @@ public class HailServiceServlet extends HttpServlet {
 
 	private Logger logger = Logger.getLogger(getClass());
 
+	private Gson gson = new Gson();
+
 	/**
 	 * Default constructor.
 	 * 
@@ -52,13 +54,7 @@ public class HailServiceServlet extends HttpServlet {
 		logger.info("doGet called");
 		try {
 			logger.info("Getting location");
-			String jsonLocation = request.getParameter("location");
-			logger.info("Printing location");
-			logger.info("\t location: " + jsonLocation);
-			logger.info("Done with location");
-			Gson gson = new Gson();
-			HailLocation location = gson.fromJson(jsonLocation,
-					HailLocation.class);
+			HailLocation location = getLocationFromRequest(request);
 			List<AbstractUser> users = HailDAO.getUsersNearLocation(location);
 			String jsonUsers = gson.toJson(users);
 			logger.info("response: " + jsonUsers);
@@ -80,7 +76,8 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doPut called");
-		// TODO create or update a cabbie or hailer
+		AbstractUser user = getUserFromRequest(request);
+		user = HailDAO.saveUserLocation(user);
 	}
 
 	/**
@@ -91,7 +88,31 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doDelete called");
-		// TODO remove a cabbie or hailer
+		AbstractUser user = getUserFromRequest(request);
+		HailDAO.removeUserLocation(user);
 	}
 
+	/**
+	 * Extracts a user object from the HTTP request.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private AbstractUser getUserFromRequest(HttpServletRequest request) {
+		String jsonLocation = request.getParameter("user");
+		logger.info("request.location: " + jsonLocation);
+		return gson.fromJson(jsonLocation, AbstractUser.class);
+	}
+
+	/**
+	 * Extracts a location object from the HTTP request.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private HailLocation getLocationFromRequest(HttpServletRequest request) {
+		String jsonLocation = request.getParameter("location");
+		logger.info("request.location: " + jsonLocation);
+		return gson.fromJson(jsonLocation, HailLocation.class);
+	}
 }
