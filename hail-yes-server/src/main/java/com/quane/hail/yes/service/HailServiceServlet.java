@@ -38,6 +38,7 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO return a list of cabbies and hailers
+		
 	}
 
 	/**
