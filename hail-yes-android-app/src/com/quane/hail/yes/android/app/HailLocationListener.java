@@ -1,4 +1,4 @@
-package com.sean.hailyes.android.app;
+package com.quane.hail.yes.android.app;
 
 import android.location.Location;
 import android.location.LocationListener;

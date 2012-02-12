@@ -1,4 +1,4 @@
-package com.sean.hailyes.android.app;
+package com.quane.hail.yes.android.app;
 
 import android.content.Context;
 import android.location.Location;
@@ -10,6 +10,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.sean.hailyes.android.app.R;
 
 /**
  * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
