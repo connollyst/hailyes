@@ -14,11 +14,6 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
 
-	public HailItemizedOverlay(Drawable defaultMarker) {
-		super(boundCenterBottom(defaultMarker));
-
-	}
-
 	public HailItemizedOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;

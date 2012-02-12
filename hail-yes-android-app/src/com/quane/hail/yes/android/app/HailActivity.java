@@ -61,7 +61,7 @@ public class HailActivity extends MapActivity {
 		mapOverlays = mapView.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(
 				R.drawable.androidmarker);
-		itemizedoverlay = new HailItemizedOverlay(drawable);
+		itemizedoverlay = new HailItemizedOverlay(drawable, this);
 		mapOverlays.add(itemizedoverlay);
 
 		// Set the default zoom on the map
