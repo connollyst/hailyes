@@ -10,6 +10,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.quane.hail.yes</groupId>
+			<artifactId>hail-yes-core</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
 			<version>6.0</version>

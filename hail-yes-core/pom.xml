@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.quane.hail.yes</groupId>
   <artifactId>hail-yes-core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <name>hail-yes-core</name>
   <description>Core classes and utilities used by the server and the clients.</description>
 </project>
