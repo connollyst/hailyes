@@ -22,7 +22,7 @@ import com.quane.hail.yes.data.HailDAO;
  * All requests to add, remove, or query the 'Hail Yes!' data go through this
  * servlet.
  */
-@WebServlet(name = "HailServiceServlet", description = "The single access point for clients to communicate with the server.", urlPatterns = { "/service" })
+@WebServlet(name = "HailServiceServlet", description = "The single access point for clients to communicate with the server.", urlPatterns = { "/services" })
 public class HailServiceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 42L;
