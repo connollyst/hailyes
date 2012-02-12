@@ -49,19 +49,13 @@ public class HailActivity extends MapActivity {
 				0, locationListener);
 
 		// Get the current location in start-up
-		Location lastKnownLocation = locationManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if (lastKnownLocation != null) {
-			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1000000);
-			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1000000);
-			GeoPoint initialLocation = new GeoPoint(lastKnownLatitute,
-					lastKnownLongitude);
-			updateMap(initialLocation);
-		} else {
+		GeoPoint initialLocation = getLastKnownGeoPoint();
+		if (initialLocation == null) {
 			System.err.println("There is no last known location, can't"
 					+ " initialize the map.");
+		} else {
+			updateMap(initialLocation);
 		}
-
 	}
 
 	/**
@@ -69,8 +63,20 @@ public class HailActivity extends MapActivity {
 	 * @param view
 	 */
 	public void onHailButtonClick(View view) {
+		GeoPoint lastKnownGeoPoint = getLastKnownGeoPoint();
 		HailCommunicator communicator = new HailCommunicator();
-		communicator.getCurrentState();
+		communicator.getCurrentState(this, lastKnownGeoPoint);
+	}
+
+	public void setLocations(HailLocation[] locations) {
+		if (locations == null || locations.length == 0) {
+			System.err.println("Given no locations to set.");
+			return;
+		}
+		for (HailLocation location : locations) {
+			System.out.println("Mapping hail location: "
+					+ location.getLatitude() + " & " + location.getLongitude());
+		}
 	}
 
 	/**
@@ -87,5 +93,24 @@ public class HailActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	/**
+	 * 
+	 * @return the last known GeoPoint, or null if none exists
+	 */
+	private GeoPoint getLastKnownGeoPoint() {
+		GeoPoint lastKnownGeoPoint = null;
+		Location lastKnownLocation = locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (lastKnownLocation != null) {
+			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1000000);
+			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1000000);
+			lastKnownGeoPoint = new GeoPoint(lastKnownLatitute,
+					lastKnownLongitude);
+		} else {
+
+		}
+		return lastKnownGeoPoint;
 	}
 }
