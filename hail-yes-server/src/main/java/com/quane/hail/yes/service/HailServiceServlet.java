@@ -2,6 +2,7 @@ package com.quane.hail.yes.service;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +14,8 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.HailLocations;
 import com.quane.hail.yes.data.HailDAO;
+import com.quane.hail.yes.user.AbstractUser;
 
 /**
  * The single access point for clients to communicate with the server.<br/>
@@ -58,11 +59,11 @@ public class HailServiceServlet extends HttpServlet {
 			Gson gson = new Gson();
 			HailLocation location = gson.fromJson(jsonLocation,
 					HailLocation.class);
-			HailLocations locations = HailDAO.getUsersNearLocation(location);
-			String jsonLocations = gson.toJson(locations);
-			logger.info("response: " + jsonLocations);
+			List<AbstractUser> users = HailDAO.getUsersNearLocation(location);
+			String jsonUsers = gson.toJson(users);
+			logger.info("response: " + jsonUsers);
 			Writer writer = response.getWriter();
-			writer.write(jsonLocations);
+			writer.write(jsonUsers);
 			writer.flush();
 			writer.close();
 		} catch (Exception e) {
