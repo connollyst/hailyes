@@ -15,6 +15,9 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.data.HailDAO;
+import com.quane.hail.yes.exception.HailYesException;
+import com.quane.hail.yes.exception.MissingLocationException;
+import com.quane.hail.yes.exception.MissingUserException;
 import com.quane.hail.yes.user.AbstractUser;
 
 /**
@@ -26,6 +29,9 @@ import com.quane.hail.yes.user.AbstractUser;
 public class HailServiceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 42L;
+
+	private static final String REQUEST_PARAMETER_USER = "user";
+	private static final String REQUEST_PARAMETER_LOCATION = "location";
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -57,13 +63,9 @@ public class HailServiceServlet extends HttpServlet {
 			HailLocation location = getLocationFromRequest(request);
 			List<AbstractUser> users = HailDAO.getUsersNearLocation(location);
 			String jsonUsers = gson.toJson(users);
-			logger.info("response: " + jsonUsers);
-			Writer writer = response.getWriter();
-			writer.write(jsonUsers);
-			writer.flush();
-			writer.close();
-		} catch (Exception e) {
-			logger.error("Something went wrong.", e);
+			writeResponse(response, jsonUsers);
+		} catch (HailYesException hye) {
+			throw new ServletException(hye);
 		}
 		logger.info("doGet done");
 	}
@@ -76,8 +78,15 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doPut called");
-		AbstractUser user = getUserFromRequest(request);
-		user = HailDAO.saveUserLocation(user);
+		try {
+			AbstractUser user = getUserFromRequest(request);
+			user = HailDAO.saveUserLocation(user);
+			String jsonUser = gson.toJson(user, AbstractUser.class);
+			writeResponse(response, jsonUser);
+		} catch (HailYesException hye) {
+			throw new ServletException(hye);
+		}
+		logger.info("doPut done");
 	}
 
 	/**
@@ -88,8 +97,14 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doDelete called");
-		AbstractUser user = getUserFromRequest(request);
-		HailDAO.removeUserLocation(user);
+		try {
+			AbstractUser user = getUserFromRequest(request);
+			HailDAO.removeUserLocation(user);
+			// no response necessary
+		} catch (HailYesException hye) {
+			throw new ServletException(hye);
+		}
+		logger.info("doDelete done");
 	}
 
 	/**
@@ -98,8 +113,14 @@ public class HailServiceServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private AbstractUser getUserFromRequest(HttpServletRequest request) {
-		String jsonLocation = request.getParameter("user");
+	private AbstractUser getUserFromRequest(HttpServletRequest request)
+			throws MissingUserException {
+		String jsonLocation = request.getParameter(REQUEST_PARAMETER_USER);
+		if (jsonLocation == null) {
+			throw new MissingUserException(
+					"Request is missing parameter named '"
+							+ REQUEST_PARAMETER_USER + "'!");
+		}
 		logger.info("request.location: " + jsonLocation);
 		return gson.fromJson(jsonLocation, AbstractUser.class);
 	}
@@ -110,9 +131,44 @@ public class HailServiceServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private HailLocation getLocationFromRequest(HttpServletRequest request) {
-		String jsonLocation = request.getParameter("location");
+	private HailLocation getLocationFromRequest(HttpServletRequest request)
+			throws MissingLocationException {
+		String jsonLocation = request.getParameter(REQUEST_PARAMETER_LOCATION);
+		if (jsonLocation == null) {
+			throw new MissingLocationException(
+					"Request is missing parameter named '"
+							+ REQUEST_PARAMETER_LOCATION + "'!");
+		}
 		logger.info("request.location: " + jsonLocation);
 		return gson.fromJson(jsonLocation, HailLocation.class);
+	}
+
+	/**
+	 * Writes the JSON string to the HTTP response, flushes, and closes.<br/>
+	 * Note, no validation of the JSON is performed at this point.
+	 * 
+	 * @param response
+	 *            the HTTP response object
+	 * @param json
+	 *            the JSON string to write
+	 */
+	private void writeResponse(HttpServletResponse response, String json) {
+		logger.info("response: " + json);
+		Writer writer = null;
+		try {
+			writer = response.getWriter();
+			writer.write(json);
+			writer.flush();
+		} catch (IOException ioe1) {
+			logger.error("", ioe1);
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException ioe2) {
+					logger.error("", ioe2);
+				}
+			}
+		}
 	}
 }
