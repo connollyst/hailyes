@@ -1,4 +1,4 @@
-package sean.connolly.hail.yes;
+package sean.connolly.hail.yes.service;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
