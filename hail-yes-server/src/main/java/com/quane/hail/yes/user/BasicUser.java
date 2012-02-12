@@ -60,4 +60,10 @@ public class BasicUser {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "BasicUser [id=" + id + ", location=" + location
+				+ ", neighbors=" + neighbors + "]";
+	}
+
 }

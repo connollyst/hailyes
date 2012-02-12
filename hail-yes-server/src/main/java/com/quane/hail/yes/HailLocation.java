@@ -79,4 +79,10 @@ public class HailLocation {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "HailLocation [latitude=" + latitude + ", longitude="
+				+ longitude + "]";
+	}
+
 }

@@ -100,5 +100,6 @@ public class HailServicesServletTest extends HttpServlet {
 			writer.write("=== parsing error: " + e.getMessage() + "\n");
 		}
 		writer.write("=== parsed response: " + responseUser + "\n");
+		
 	}
 }
