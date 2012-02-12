@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * All requests to add, remove, or query the 'Hail Yes!' data go through this
  * servlet.
  */
-@WebServlet(name = "HailServiceServlet", description = "The single access point for clients to communicate with the server.", urlPatterns = { "/HailServiceServlet" })
+@WebServlet(name = "HailServiceServlet", description = "The single access point for clients to communicate with the server.", urlPatterns = { "/service" })
 public class HailServiceServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 42L;
@@ -37,8 +37,7 @@ public class HailServiceServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// TODO return a list of cabbies and hailers
-		
+
 	}
 
 	/**
