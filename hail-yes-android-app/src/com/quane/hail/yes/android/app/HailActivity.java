@@ -99,6 +99,7 @@ public class HailActivity extends MapActivity {
 	 * @param locations
 	 */
 	public void setLocations(HailLocations locations) {
+		itemizedoverlay.clear();
 		if (locations == null || locations.getLocations() == null
 				|| locations.getLocations().isEmpty()) {
 			System.err.println("Given no locations to set.");

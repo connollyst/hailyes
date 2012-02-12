@@ -16,6 +16,7 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public HailItemizedOverlay(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
+
 	}
 
 	public HailItemizedOverlay(Drawable defaultMarker, Context context) {
@@ -33,6 +34,11 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public int size() {
 		return mOverlays.size();
+	}
+
+	public void clear() {
+		mOverlays.clear();
+		populate();
 	}
 
 	@Override
