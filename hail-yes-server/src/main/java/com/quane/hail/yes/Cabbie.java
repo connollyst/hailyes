@@ -1,4 +1,4 @@
-package sean.connolly.hail.yes;
+package com.quane.hail.yes;
 
 public class Cabbie extends HailUser {
 
