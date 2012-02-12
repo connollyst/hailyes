@@ -8,33 +8,42 @@ import com.google.android.maps.GeoPoint;
 
 public class HailLocationListener implements LocationListener {
 
-	private HailActivity hail;
+	private HailActivity hailActivity;
 
-	public HailLocationListener(HailActivity hail) {
+	/**
+	 * Default constructor, requires access to the central HailActivity object
+	 * so it can update the interface when necessary.
+	 * 
+	 * @param hailActivity
+	 */
+	public HailLocationListener(HailActivity hailActivity) {
 		super();
-		this.hail = hail;
+		this.hailActivity = hailActivity;
 	}
 
+	/**
+	 * 
+	 * @param location
+	 *            the new location
+	 */
 	public void onLocationChanged(Location location) {
 		GeoPoint locationGeoPoint = new GeoPoint(
 				(int) (location.getLatitude() * 1000000),
 				(int) (location.getLongitude() * 1000000));
-		hail.updateMap(locationGeoPoint);
+		hailActivity.updateMap(locationGeoPoint);
 	}
 
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
+		// TODO Should warn the user that their location is not being updated
+		// anymore
 	}
 
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
+		// TODO Should hide any warning that was displayed
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
+		// TODO What is this?
 	}
 
 }

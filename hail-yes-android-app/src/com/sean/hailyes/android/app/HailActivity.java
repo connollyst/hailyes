@@ -11,6 +11,12 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
+/**
+ * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
+ * user's current location and listens for location updates.
+ * 
+ * @ * @author Sean Connolly
+ */
 public class HailActivity extends MapActivity {
 
 	private LocationManager locationManager;
