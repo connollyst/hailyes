@@ -3,11 +3,11 @@ package com.quane.hail.yes.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.quane.hail.yes.Cabbie;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.HailLocations;
-import com.quane.hail.yes.HailUser;
-import com.quane.hail.yes.Hailer;
+import com.quane.hail.yes.user.Cabbie;
+import com.quane.hail.yes.user.HailUser;
+import com.quane.hail.yes.user.Hailer;
 
 /**
  * Data access object.

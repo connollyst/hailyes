@@ -1,4 +1,6 @@
-package com.quane.hail.yes;
+package com.quane.hail.yes.user;
+
+import com.quane.hail.yes.HailLocation;
 
 public abstract class HailUser {
 
