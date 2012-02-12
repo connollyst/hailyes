@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.HailLocations;
-import com.quane.hail.yes.user.Cabbie;
-import com.quane.hail.yes.user.HailUser;
-import com.quane.hail.yes.user.Hailer;
+import com.quane.hail.yes.user.Driver;
+import com.quane.hail.yes.user.AbstractUser;
+import com.quane.hail.yes.user.Rider;
 
 /**
  * Data access object.
@@ -22,34 +22,34 @@ public class HailDAO {
 	 * @return
 	 */
 	public static HailLocations getUsersNearLocation(HailLocation location) {
-		List<HailUser> users = new ArrayList<HailUser>();
-		HailUser user;
+		List<AbstractUser> users = new ArrayList<AbstractUser>();
+		AbstractUser user;
 		// fake cabbie #1000
-		user = new Cabbie();
+		user = new Driver();
 		user.setLocation(new HailLocation(location.getLatitude() - 1000,
 				location.getLongitude() - 1000));
 		users.add(user);
 
 		// fake cabbie #2
-		user = new Cabbie();
+		user = new Driver();
 		user.setLocation(new HailLocation(location.getLatitude() + 1000,
 				location.getLongitude() - 1000));
 		users.add(user);
 
 		// fake hailer #1000
-		user = new Hailer();
+		user = new Rider();
 		user.setLocation(new HailLocation(location.getLatitude() + 1000,
 				location.getLongitude() + 1000));
 		users.add(user);
 
 		// fake hailer #2
-		user = new Hailer();
+		user = new Rider();
 		user.setLocation(new HailLocation(location.getLatitude() - 1000,
 				location.getLongitude() + 1000));
 		users.add(user);
 
 		HailLocations locations = new HailLocations();
-		for (HailUser nextUser : users) {
+		for (AbstractUser nextUser : users) {
 			locations.getLocations().add(nextUser.getLocation());
 		}
 		return locations;
