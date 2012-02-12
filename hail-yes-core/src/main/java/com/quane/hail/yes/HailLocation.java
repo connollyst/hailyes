@@ -33,7 +33,7 @@ public class HailLocation {
 		this.longitude = longitude;
 	}
 
-	public double getLatitudeE6() {
+	public int getLatitudeE6() {
 		return (int) (latitude * E6);
 	}
 
@@ -41,7 +41,7 @@ public class HailLocation {
 		this.latitude = (latitudeE6 / E6);
 	}
 
-	public double getLongitudeE6() {
+	public int getLongitudeE6() {
 		return (int) (longitude * E6);
 	}
 
