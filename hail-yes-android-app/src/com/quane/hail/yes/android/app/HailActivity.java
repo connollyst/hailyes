@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -50,13 +51,32 @@ public class HailActivity extends MapActivity {
 		// Get the current location in start-up
 		Location lastKnownLocation = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1000000);
-		int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1000000);
-		GeoPoint initialLocation = new GeoPoint(lastKnownLatitute,
-				lastKnownLongitude);
-		updateMap(initialLocation);
+		if (lastKnownLocation != null) {
+			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1000000);
+			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1000000);
+			GeoPoint initialLocation = new GeoPoint(lastKnownLatitute,
+					lastKnownLongitude);
+			updateMap(initialLocation);
+		} else {
+			System.err.println("There is no last known location, can't"
+					+ " initialize the map.");
+		}
+
 	}
 
+	/**
+	 * 
+	 * @param view
+	 */
+	public void onHailButtonClick(View view) {
+		HailCommunicator communicator = new HailCommunicator();
+		communicator.getCurrentState();
+	}
+
+	/**
+	 * 
+	 * @param location
+	 */
 	public void updateMap(GeoPoint location) {
 		mapController.animateTo(location);
 	}

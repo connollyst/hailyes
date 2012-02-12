@@ -5,9 +5,17 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/statusText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:text="@string/status" />
+
+    <Button
+        android:id="@+id/hailButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onHailButtonClick"
+        android:text="@string/hail_button_text" />
 
     <com.google.android.maps.MapView
         android:id="@+id/map"
