@@ -24,28 +24,28 @@ public class HailDAO {
 	public static HailLocations getUsersNearLocation(HailLocation location) {
 		List<HailUser> users = new ArrayList<HailUser>();
 		HailUser user;
-		// fake cabbie #1
+		// fake cabbie #1000
 		user = new Cabbie();
-		user.setLocation(new HailLocation(location.getLatitude() - 1, location
-				.getLongitude() - 1));
+		user.setLocation(new HailLocation(location.getLatitude() - 1000,
+				location.getLongitude() - 1000));
 		users.add(user);
 
 		// fake cabbie #2
 		user = new Cabbie();
-		user.setLocation(new HailLocation(location.getLatitude() + 1, location
-				.getLongitude() - 1));
+		user.setLocation(new HailLocation(location.getLatitude() + 1000,
+				location.getLongitude() - 1000));
 		users.add(user);
 
-		// fake hailer #1
+		// fake hailer #1000
 		user = new Hailer();
-		user.setLocation(new HailLocation(location.getLatitude() + 1, location
-				.getLongitude() + 1));
+		user.setLocation(new HailLocation(location.getLatitude() + 1000,
+				location.getLongitude() + 1000));
 		users.add(user);
 
 		// fake hailer #2
 		user = new Hailer();
-		user.setLocation(new HailLocation(location.getLatitude() - 1, location
-				.getLongitude() + 1));
+		user.setLocation(new HailLocation(location.getLatitude() - 1000,
+				location.getLongitude() + 1000));
 		users.add(user);
 
 		HailLocations locations = new HailLocations();
