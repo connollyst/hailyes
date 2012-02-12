@@ -17,7 +17,8 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.quane.hail.yes.android.app.R;
+import com.quane.hail.yes.HailLocation;
+import com.quane.hail.yes.HailLocations;
 
 /**
  * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
@@ -108,8 +109,8 @@ public class HailActivity extends MapActivity {
 		for (HailLocation location : locations.getLocations()) {
 			System.out.println("Mapping hail location: "
 					+ location.getLatitude() + " & " + location.getLongitude());
-			GeoPoint point = new GeoPoint(location.getLatitude(),
-					location.getLongitude());
+			GeoPoint point = new GeoPoint(location.getLatitudeE6(),
+					location.getLongitudeE6());
 			OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!",
 					"I'm in Mexico City!");
 			itemizedoverlay.addOverlay(overlayitem);

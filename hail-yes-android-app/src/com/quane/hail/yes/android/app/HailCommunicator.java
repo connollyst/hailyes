@@ -17,6 +17,7 @@ import org.apache.http.params.HttpParams;
 
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
+import com.quane.hail.yes.HailLocations;
 
 public class HailCommunicator {
 
