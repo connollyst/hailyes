@@ -1,11 +1,19 @@
 package com.quane.hail.yes.service;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+import com.quane.hail.yes.HailUser;
+import com.quane.hail.yes.Location;
+import com.quane.hail.yes.data.HailDAO;
 
 /**
  * The single access point for clients to communicate with the server.<br/>
@@ -37,7 +45,17 @@ public class HailServiceServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		System.out.println("doGet called");
+		String jsonLocation = request.getParameter("location");
+		Gson gson = new Gson();
+		Location location = gson.fromJson(jsonLocation, Location.class);
+		List<HailUser> users = HailDAO.getUsersNearLocation(location);
+		String jsonUsers = gson.toJson(users);
+		Writer writer = response.getWriter();
+		writer.write(jsonUsers);
+		writer.flush();
+		writer.close();
+		System.out.println("doGet done");
 	}
 
 	/**
@@ -47,6 +65,7 @@ public class HailServiceServlet extends HttpServlet {
 	 */
 	protected void doPut(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doPut called");
 		// TODO create or update a cabbie or hailer
 	}
 
@@ -57,6 +76,7 @@ public class HailServiceServlet extends HttpServlet {
 	 */
 	protected void doDelete(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doDelete called");
 		// TODO remove a cabbie or hailer
 	}
 

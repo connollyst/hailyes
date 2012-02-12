@@ -3,11 +3,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.quane.hail.yes</groupId>
 	<artifactId>hail-yes-server</artifactId>
+	<packaging>war</packaging>
 	<version>0.1-SNAPSHOT</version>
 	<name>hail-yes-server</name>
 	<description>The server component of 'Hail Yes'.</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-web-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -16,6 +30,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>hailyes</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
