@@ -2,13 +2,13 @@ package com.quane.hail.yes;
 
 public abstract class HailUser {
 
-	private Location location;
+	private HailLocation location;
 
-	public Location getLocation() {
+	public HailLocation getLocation() {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	public void setLocation(HailLocation location) {
 		this.location = location;
 	}
 

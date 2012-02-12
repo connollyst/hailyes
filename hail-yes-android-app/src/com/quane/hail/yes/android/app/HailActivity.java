@@ -29,8 +29,8 @@ public class HailActivity extends MapActivity {
 	private MapController mapController;
 
 	/**
-     * 
-     */
+	 * Home is: -122.424302 37.758654
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,12 +68,13 @@ public class HailActivity extends MapActivity {
 		communicator.getCurrentState(this, lastKnownGeoPoint);
 	}
 
-	public void setLocations(HailLocation[] locations) {
-		if (locations == null || locations.length == 0) {
+	public void setLocations(HailLocations locations) {
+		if (locations == null || locations.getLocations() == null
+				|| locations.getLocations().isEmpty()) {
 			System.err.println("Given no locations to set.");
 			return;
 		}
-		for (HailLocation location : locations) {
+		for (HailLocation location : locations.getLocations()) {
 			System.out.println("Mapping hail location: "
 					+ location.getLatitude() + " & " + location.getLongitude());
 		}

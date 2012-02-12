@@ -5,29 +5,29 @@ package com.quane.hail.yes;
  * 
  * @author Sean Connolly
  */
-public class Location {
+public class HailLocation {
 
-	private int latitude;
-	private int longitude;
+	private Long latitude;
+	private Long longitude;
 
-	public Location(int latitude, int longitude) {
+	public HailLocation(Long latitude, Long longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
-	public int getLatitude() {
+	public Long getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(int latitude) {
+	public void setLatitude(Long latitude) {
 		this.latitude = latitude;
 	}
 
-	public int getLongitude() {
+	public Long getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(int longitude) {
+	public void setLongitude(Long longitude) {
 		this.longitude = longitude;
 	}
 

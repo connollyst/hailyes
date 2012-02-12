@@ -7,8 +7,12 @@ package com.quane.hail.yes.android.app;
  */
 public class HailLocation {
 
-	private int latitude;
-	private int longitude;
+	public int latitude;
+	public int longitude;
+
+	public HailLocation() {
+		System.out.println("Called default HailLocation constructor.");
+	}
 
 	public HailLocation(int latitude, int longitude) {
 		this.latitude = latitude;
@@ -20,6 +24,7 @@ public class HailLocation {
 	}
 
 	public void setLatitude(int latitude) {
+		System.out.println("> Setting latitude");
 		this.latitude = latitude;
 	}
 
@@ -28,6 +33,7 @@ public class HailLocation {
 	}
 
 	public void setLongitude(int longitude) {
+		System.out.println("> Setting longitude");
 		this.longitude = longitude;
 	}
 

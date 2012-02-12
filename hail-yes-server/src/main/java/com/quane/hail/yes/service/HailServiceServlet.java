@@ -2,7 +2,6 @@ package com.quane.hail.yes.service;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
-import com.quane.hail.yes.HailUser;
-import com.quane.hail.yes.Location;
+import com.quane.hail.yes.HailLocation;
+import com.quane.hail.yes.HailLocations;
 import com.quane.hail.yes.data.HailDAO;
 
 /**
@@ -50,16 +49,25 @@ public class HailServiceServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doGet called");
-		String jsonLocation = request.getParameter("location");
-		Gson gson = new Gson();
-		Location location = gson.fromJson(jsonLocation, Location.class);
-		List<HailUser> users = HailDAO.getUsersNearLocation(location);
-		String jsonUsers = gson.toJson(users);
-		logger.info("response: " + jsonUsers);
-		Writer writer = response.getWriter();
-		writer.write(jsonUsers);
-		writer.flush();
-		writer.close();
+		try {
+			logger.info("Getting location");
+			String jsonLocation = request.getParameter("location");
+			logger.info("Printing location");
+			logger.info("\t location: " + jsonLocation);
+			logger.info("Done with location");
+			Gson gson = new Gson();
+			HailLocation location = gson.fromJson(jsonLocation,
+					HailLocation.class);
+			HailLocations locations = HailDAO.getUsersNearLocation(location);
+			String jsonLocations = gson.toJson(locations);
+			logger.info("response: " + jsonLocations);
+			Writer writer = response.getWriter();
+			writer.write(jsonLocations);
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			logger.error("Something went wrong.", e);
+		}
 		logger.info("doGet done");
 	}
 
