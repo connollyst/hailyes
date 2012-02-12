@@ -30,7 +30,7 @@ public class HailLocationListener implements LocationListener {
 		GeoPoint locationGeoPoint = new GeoPoint(
 				(int) (location.getLatitude() * 1000000),
 				(int) (location.getLongitude() * 1000000));
-		hailActivity.updateMap(locationGeoPoint);
+//		hailActivity.updateMap(locationGeoPoint);
 	}
 
 	public void onProviderDisabled(String provider) {

@@ -4,12 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/status" />
-
     <Button
         android:id="@+id/hailButton"
         android:layout_width="fill_parent"
@@ -22,6 +16,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:apiKey="0CXMYimUbZ7X0urDilN9avYQNuMgv0Nn-alrCpQ"
-        android:clickable="false" />
+        android:clickable="true" />
 
 </LinearLayout>
