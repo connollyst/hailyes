@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.google.android.maps.GeoPoint;
@@ -34,6 +35,8 @@ public class HailActivity extends MapActivity {
 	private MapController mapController;
 	private HailItemizedOverlay itemizedoverlay;
 	private List<Overlay> mapOverlays;
+
+	final Handler mHandler = new Handler();
 
 	/**
 	 * Home is: -122.424302 x 37.758654
@@ -62,13 +65,14 @@ public class HailActivity extends MapActivity {
 		mapOverlays.add(itemizedoverlay);
 
 		// Set the default zoom on the map
-		mapController.setZoom(18);
+		mapController.setZoom(13);
 
 		// Get the current location in start-up
 		GeoPoint initialLocation = getLastKnownGeoPoint();
 		if (initialLocation == null) {
 			System.err.println("There is no last known location, can't"
 					+ " initialize the map.");
+			// TODO
 			initialLocation = new GeoPoint(19240000, -99120000);
 		} else {
 			updateMap(initialLocation);
@@ -86,8 +90,8 @@ public class HailActivity extends MapActivity {
 	 */
 	public void onHailButtonClick(View view) {
 		GeoPoint lastKnownGeoPoint = getLastKnownGeoPoint();
-		HailCommunicator communicator = new HailCommunicator();
-		communicator.getCurrentState(this, lastKnownGeoPoint);
+		HailCommunicator communicator = new HailCommunicator(this);
+		communicator.getCurrentState(lastKnownGeoPoint);
 	}
 
 	/**
@@ -146,4 +150,9 @@ public class HailActivity extends MapActivity {
 		}
 		return lastKnownGeoPoint;
 	}
+
+	public Handler getmHandler() {
+		return mHandler;
+	}
+
 }

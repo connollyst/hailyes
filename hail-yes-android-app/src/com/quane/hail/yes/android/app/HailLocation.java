@@ -11,7 +11,6 @@ public class HailLocation {
 	public int longitude;
 
 	public HailLocation() {
-		System.out.println("Called default HailLocation constructor.");
 	}
 
 	public HailLocation(int latitude, int longitude) {
@@ -24,7 +23,6 @@ public class HailLocation {
 	}
 
 	public void setLatitude(int latitude) {
-		System.out.println("> Setting latitude");
 		this.latitude = latitude;
 	}
 
@@ -33,7 +31,6 @@ public class HailLocation {
 	}
 
 	public void setLongitude(int longitude) {
-		System.out.println("> Setting longitude");
 		this.longitude = longitude;
 	}
 

@@ -21,21 +21,35 @@ import com.google.gson.Gson;
 public class HailCommunicator {
 
 	private DefaultHttpClient httpClient;
+	private final HailActivity hailActivity;
+	private HailLocations locations;
 
-	public HailCommunicator() {
+	// Create runnable for posting
+	final Runnable mUpdateResults = new Runnable() {
+		public void run() {
+			hailActivity.setLocations(locations);
+			updateResultsInUi();
+		}
+	};
+
+	private void updateResultsInUi() {
+		hailActivity.setLocations(locations);
+	}
+
+	public HailCommunicator(final HailActivity hailActivity) {
 		httpClient = new DefaultHttpClient();
+		this.hailActivity = hailActivity;
 	}
 
 	public void registerAsHailer() {
-
+		// TODO
 	}
 
 	public void registerAsCabbie() {
-
+		// TODO
 	}
 
-	public void getCurrentState(final HailActivity hailActivity,
-			final GeoPoint location) {
+	public void getCurrentState(final GeoPoint location) {
 		System.out.println("Status: contacting server");
 		new Thread(new Runnable() {
 			public void run() {
@@ -58,9 +72,9 @@ public class HailCommunicator {
 					System.out.println("Status: response=" + response);
 					if (response != null) {
 						Gson gson = new Gson();
-						HailLocations locations = gson.fromJson(response,
-								HailLocations.class);
-						hailActivity.setLocations(locations);
+						locations = gson
+								.fromJson(response, HailLocations.class);
+						hailActivity.getmHandler().post(mUpdateResults);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
