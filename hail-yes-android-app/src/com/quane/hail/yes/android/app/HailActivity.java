@@ -17,7 +17,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.sean.hailyes.android.app.R;
+import com.quane.hail.yes.android.app.R;
 
 /**
  * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
