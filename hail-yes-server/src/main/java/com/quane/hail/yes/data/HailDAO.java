@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import com.quane.hail.yes.HailLocation;
@@ -18,6 +19,8 @@ import com.quane.hail.yes.user.Rider;
  * @author Sean Connolly
  */
 public class HailDAO {
+
+	private static final Random generator = new Random();
 
 	private static Map<UUID, BasicUser> users = Collections
 			.synchronizedMap(new HashMap<UUID, BasicUser>());
@@ -34,26 +37,26 @@ public class HailDAO {
 		BasicUser user;
 		// fake driver #1
 		user = new Driver();
-		user.setLocation(new HailLocation(location.getLatitude() - 1000,
-				location.getLongitude() - 1000));
+		user.setLocation(new HailLocation(location.getLatitude()
+				- randomOffset(), location.getLongitude() - randomOffset()));
 		users.add(user);
 
 		// fake driver #2
 		user = new Driver();
-		user.setLocation(new HailLocation(location.getLatitude() + 1000,
-				location.getLongitude() - 1000));
+		user.setLocation(new HailLocation(location.getLatitude()
+				+ randomOffset(), location.getLongitude() - randomOffset()));
 		users.add(user);
 
 		// fake rider #1
 		user = new Rider();
-		user.setLocation(new HailLocation(location.getLatitude() + 1000,
-				location.getLongitude() + 1000));
+		user.setLocation(new HailLocation(location.getLatitude()
+				+ randomOffset(), location.getLongitude() + randomOffset()));
 		users.add(user);
 
 		// fake rider #2
 		user = new Rider();
-		user.setLocation(new HailLocation(location.getLatitude() - 1000,
-				location.getLongitude() + 1000));
+		user.setLocation(new HailLocation(location.getLatitude()
+				- randomOffset(), location.getLongitude() + randomOffset()));
 		users.add(user);
 
 		return users;
@@ -84,5 +87,9 @@ public class HailDAO {
 	 */
 	public static void removeUserLocation(BasicUser user) {
 		users.remove(user.getId());
+	}
+
+	private static double randomOffset() {
+		return generator.nextDouble() * 0.01;
 	}
 }
