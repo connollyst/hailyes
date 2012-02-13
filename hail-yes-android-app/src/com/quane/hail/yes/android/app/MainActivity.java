@@ -5,6 +5,7 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,8 @@ import com.quane.hail.yes.android.app.ui.MainController;
  */
 public class MainActivity extends MapActivity {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
+
 	private final Handler handler = new Handler();
 	private MainController mainController;
 	private MapView mapView;
@@ -38,8 +41,8 @@ public class MainActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(false);
-		mapView.getController().setZoom(16);
+		mapView.setBuiltInZoomControls(true);
+		mapView.getController().setZoom(15);
 		// The main controller is responsible for coordinating all business
 		// logic back to us, start it up now
 		mainController = new MainController(this);
@@ -97,7 +100,9 @@ public class MainActivity extends MapActivity {
 	 * 
 	 * @param location
 	 */
-	public void updateMap(GeoPoint location) {
+	public void centerMap(GeoPoint location) {
+		Log.i(TAG, "Centering map on " + (location.getLatitudeE6() / 1E6)
+				+ " & " + (location.getLongitudeE6() / 1E6));
 		mapView.getController().animateTo(location);
 	}
 

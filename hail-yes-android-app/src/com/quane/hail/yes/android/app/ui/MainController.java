@@ -8,26 +8,29 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.android.app.MainActivity;
 import com.quane.hail.yes.android.app.service.AppLocationListener;
 import com.quane.hail.yes.android.app.service.ServerCommunicator;
-import com.quane.hail.yes.android.app.ui.overlay.DriverOverlay;
+import com.quane.hail.yes.android.app.ui.overlay.AppOverlay;
 
 public class MainController {
+
+	private static final String TAG = MainController.class.getSimpleName();
 
 	private MainActivity mainActivity;
 
 	private LocationManager locationManager;
 	private LocationListener locationListener;
 
-	private DriverOverlay mapOverlay;
+	private AppOverlay mapOverlay;
 
-	private List<HailLocation> locations;
+	private HailLocation myLocation;
+	private List<HailLocation> otherLocations;
 
 	// A runnable for executing the private redrawOverlay function in the UI
 	// thread
@@ -63,25 +66,27 @@ public class MainController {
 	 * Create and initialize the overlay layer
 	 */
 	public void initOverlay() {
-		List<Overlay> mapOverlays = mainActivity.getMapViewOverlays();
 		Drawable drawable = mainActivity.getDrawableMePin();
-		mapOverlay = new DriverOverlay(drawable, mainActivity);
-		mapOverlays.add(mapOverlay);
+		mapOverlay = new AppOverlay(drawable);
+		mainActivity.getMapViewOverlays().add(mapOverlay);
 
-		// Get the current location in start-up
+		// Center on the last known location
 		GeoPoint initialLocation = getLastKnownGeoPoint();
 		if (initialLocation == null) {
+			// TODO
 			System.err.println("There is no last known location, can't"
 					+ " initialize the map.");
-			// TODO
 			initialLocation = new GeoPoint(19240000, -99120000);
-		} else {
-			mainActivity.updateMap(initialLocation);
 		}
-		// Add a locator for my current location
-		OverlayItem meOverlayItem = new OverlayItem(initialLocation, "Me",
-				"Hail Yes!");
-		mapOverlay.addOverlay(meOverlayItem);
+		mainActivity.centerMap(initialLocation);
+
+		// Set my location for the overlay
+		myLocation = new HailLocation(0, 0);
+		myLocation.setLatitudeE6(initialLocation.getLatitudeE6());
+		myLocation.setLongitudeE6(initialLocation.getLongitudeE6());
+
+		// Draw the overlay
+		redrawOverlay();
 	}
 
 	/**
@@ -93,7 +98,7 @@ public class MainController {
 	 *            the new list of locations for drivers and riders
 	 */
 	public void redrawOverlay(List<HailLocation> locations) {
-		this.locations = locations;
+		otherLocations = locations;
 		getActivityHandler().post(runnableRedrawOverlay);
 	}
 
@@ -105,24 +110,39 @@ public class MainController {
 	 * OverlayItems unless we need to and by just updating the coordinates of
 	 * any existing points.. can that be done?
 	 * 
-	 * @param locations
+	 * @param otherLocations
 	 */
 	private void redrawOverlay() {
-		mapOverlay.clear();
-		if (locations == null || locations.isEmpty()) {
-			System.err.println("Given no locations to set.");
-			return;
-		}
+		Log.v(TAG, "Redrawing overlay");
 		GeoPoint point;
 		OverlayItem item;
-		for (HailLocation location : locations) {
-			System.out.println("Mapping hail location: "
-					+ location.getLatitude() + " & " + location.getLongitude());
-			point = new GeoPoint(location.getLatitudeE6(),
-					location.getLongitudeE6());
-			item = new OverlayItem(point, "Title", "Snippet");
-			mapOverlay.addOverlay(item);
+
+		// Remove all previous overlay items
+		mapOverlay.clear();
+
+		// Draw my overlay item
+		System.out.println("Drawing my location @ " + myLocation.getLatitude()
+				+ " & " + myLocation.getLongitude());
+		point = new GeoPoint(myLocation.getLatitudeE6(),
+				myLocation.getLongitudeE6());
+		item = new OverlayItem(point, "Title", "Snippet");
+		mapOverlay.addOverlayItem(item);
+
+		// Draw all other overlay items
+		if (otherLocations == null || otherLocations.isEmpty()) {
+			System.err.println("Given no locations to set.");
+		} else {
+			for (HailLocation location : otherLocations) {
+				System.out.println("Drawing other location @ "
+						+ location.getLatitude() + " & "
+						+ location.getLongitude());
+				point = new GeoPoint(location.getLatitudeE6(),
+						location.getLongitudeE6());
+				item = new OverlayItem(point, "Title", "Snippet");
+				mapOverlay.addOverlayItem(item);
+			}
 		}
+		mapOverlay.populateOverlay();
 	}
 
 	/**
