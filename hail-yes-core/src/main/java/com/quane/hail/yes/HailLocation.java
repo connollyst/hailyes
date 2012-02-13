@@ -7,14 +7,17 @@ package com.quane.hail.yes;
  */
 public class HailLocation {
 
-	private static final int E6 = 1000000;
-
 	private double latitude;
 	private double longitude;
 
 	public HailLocation(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	public HailLocation(int latitudeE6, int longitudeE6) {
+		setLatitudeE6(latitudeE6);
+		setLongitudeE6(longitudeE6);
 	}
 
 	public double getLatitude() {
@@ -34,19 +37,19 @@ public class HailLocation {
 	}
 
 	public int getLatitudeE6() {
-		return (int) (latitude * E6);
+		return (int) (latitude * 1E6);
 	}
 
 	public void setLatitudeE6(int latitudeE6) {
-		this.latitude = (latitudeE6 / E6);
+		this.latitude = (latitudeE6 / 1E6);
 	}
 
 	public int getLongitudeE6() {
-		return (int) (longitude * E6);
+		return (int) (longitude * 1E6);
 	}
 
 	public void setLongitudeE6(int longitudeE6) {
-		this.longitude = (longitudeE6 / E6);
+		this.longitude = (longitudeE6 / 1E6);
 	}
 
 	@Override
