@@ -14,17 +14,19 @@ import com.google.android.maps.Overlay;
 import com.quane.hail.yes.android.app.ui.MainController;
 
 /**
- * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
- * user's current location and listens for location updates.
+ * The main Activity in 'Hail Yes!'.<br/>
+ * In the Model-Controller-Presenter-View architecture Activities are
+ * Presenters, communicating between the view, defined in XML definition and
+ * conceived as the UI at runtime, and the controller, where all the business
+ * logic resides.
  * 
- * @ * @author Sean Connolly
+ * @author Sean Connolly
  */
 public class MainActivity extends MapActivity {
 
+	private final Handler handler = new Handler();
 	private MainController mainController;
 	private MapView mapView;
-
-	private final Handler handler = new Handler();
 
 	/**
 	 * Home is: -122.424302 x 37.758654
@@ -35,9 +37,10 @@ public class MainActivity extends MapActivity {
 		setContentView(R.layout.main);
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.setBuiltInZoomControls(true);
-
-		// Set the default zoom on the map
 		mapView.getController().setZoom(16);
+		// The main controller is responsible for coordinating all business
+		// logic back to us, start it up now
+		mainController = new MainController(this);
 	}
 
 	/**
