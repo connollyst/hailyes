@@ -19,6 +19,9 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.HailLocations;
+import com.quane.hail.yes.android.app.service.ServerCommunicator;
+import com.quane.hail.yes.android.app.service.AppLocationListener;
+import com.quane.hail.yes.android.app.ui.overlay.DriverOverlay;
 
 /**
  * The main Activity in 'Hail Yes!'. Displays the Google Map, focused on the
@@ -26,7 +29,7 @@ import com.quane.hail.yes.HailLocations;
  * 
  * @ * @author Sean Connolly
  */
-public class HailActivity extends MapActivity {
+public class MainActivity extends MapActivity {
 
 	private LocationManager locationManager;
 	private LocationListener locationListener;
@@ -34,7 +37,7 @@ public class HailActivity extends MapActivity {
 	private MapView mapView;
 
 	private MapController mapController;
-	private HailItemizedOverlay itemizedoverlay;
+	private DriverOverlay itemizedoverlay;
 	private List<Overlay> mapOverlays;
 
 	final Handler mHandler = new Handler();
@@ -53,7 +56,7 @@ public class HailActivity extends MapActivity {
 		mapController = mapView.getController();
 
 		// Register the GPS location listener and manager
-		locationListener = new HailLocationListener(this);
+		locationListener = new AppLocationListener(this);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 				0, locationListener);
@@ -62,7 +65,7 @@ public class HailActivity extends MapActivity {
 		mapOverlays = mapView.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(
 				R.drawable.me_pin_32);
-		itemizedoverlay = new HailItemizedOverlay(drawable, this);
+		itemizedoverlay = new DriverOverlay(drawable, this);
 		mapOverlays.add(itemizedoverlay);
 
 		// Set the default zoom on the map
@@ -91,7 +94,7 @@ public class HailActivity extends MapActivity {
 	 */
 	public void onHailButtonClick(View view) {
 		GeoPoint lastKnownGeoPoint = getLastKnownGeoPoint();
-		HailCommunicator communicator = new HailCommunicator(this);
+		ServerCommunicator communicator = new ServerCommunicator(this);
 		communicator.getCurrentState(lastKnownGeoPoint);
 	}
 
@@ -143,8 +146,8 @@ public class HailActivity extends MapActivity {
 		Location lastKnownLocation = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (lastKnownLocation != null) {
-			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1000000);
-			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1000000);
+			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1E6);
+			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1E6);
 			lastKnownGeoPoint = new GeoPoint(lastKnownLatitute,
 					lastKnownLongitude);
 		} else {

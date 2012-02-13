@@ -1,4 +1,4 @@
-package com.quane.hail.yes.android.app;
+package com.quane.hail.yes.android.app.ui.overlay;
 
 import java.util.ArrayList;
 
@@ -9,12 +9,12 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
-public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+public class DriverOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
 
-	public HailItemizedOverlay(Drawable defaultMarker, Context context) {
+	public DriverOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
 	}

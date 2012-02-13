@@ -1,14 +1,15 @@
-package com.quane.hail.yes.android.app;
+package com.quane.hail.yes.android.app.service;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
 import com.google.android.maps.GeoPoint;
+import com.quane.hail.yes.android.app.MainActivity;
 
-public class HailLocationListener implements LocationListener {
+public class AppLocationListener implements LocationListener {
 
-	private HailActivity hailActivity;
+	private MainActivity hailActivity;
 
 	/**
 	 * Default constructor, requires access to the central HailActivity object
@@ -16,7 +17,7 @@ public class HailLocationListener implements LocationListener {
 	 * 
 	 * @param hailActivity
 	 */
-	public HailLocationListener(HailActivity hailActivity) {
+	public AppLocationListener(MainActivity hailActivity) {
 		super();
 		this.hailActivity = hailActivity;
 	}

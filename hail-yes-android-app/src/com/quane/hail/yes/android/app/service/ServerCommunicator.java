@@ -1,4 +1,4 @@
-package com.quane.hail.yes.android.app;
+package com.quane.hail.yes.android.app.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,12 +20,13 @@ import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.quane.hail.yes.HailLocations;
 import com.quane.hail.yes.StandardsResource;
+import com.quane.hail.yes.android.app.MainActivity;
 import com.quane.hail.yes.user.BasicUser;
 
-public class HailCommunicator {
+public class ServerCommunicator {
 
 	private DefaultHttpClient httpClient;
-	private final HailActivity hailActivity;
+	private final MainActivity hailActivity;
 	private HailLocations locations;
 
 	// Create runnable for posting
@@ -40,7 +41,7 @@ public class HailCommunicator {
 		hailActivity.setLocations(locations);
 	}
 
-	public HailCommunicator(final HailActivity hailActivity) {
+	public ServerCommunicator(final MainActivity hailActivity) {
 		httpClient = new DefaultHttpClient();
 		this.hailActivity = hailActivity;
 	}
