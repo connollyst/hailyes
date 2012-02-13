@@ -19,6 +19,8 @@ import org.apache.http.params.HttpParams;
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.quane.hail.yes.HailLocations;
+import com.quane.hail.yes.StandardsResource;
+import com.quane.hail.yes.user.BasicUser;
 
 public class HailCommunicator {
 
@@ -43,11 +45,11 @@ public class HailCommunicator {
 		this.hailActivity = hailActivity;
 	}
 
-	public void registerAsHailer() {
+	public void registerAsRider() {
 		// TODO
 	}
 
-	public void registerAsCabbie() {
+	public void registerAsDriver() {
 		// TODO
 	}
 
@@ -56,12 +58,17 @@ public class HailCommunicator {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
+					Gson gson = new Gson();
 					// Prepare the parameters
 					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
 					queryParams.add(new BasicNameValuePair("location",
-							"{latitude:" + location.getLatitudeE6()
-									+ ",longitude:" + location.getLongitudeE6()
-									+ "}"));
+							"{latitude:" + (location.getLatitudeE6() / 1E6)
+									+ ",longitude:"
+									+ (location.getLongitudeE6() / 1E6) + "}"));
+					queryParams
+							.add(new BasicNameValuePair(
+									StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
+									StandardsResource.QUERY_PARAMETER_VALUES.COORDINATES_ARE_E6_FALSE));
 					HttpGet get = new HttpGet(getURI(queryParams));
 					final HttpParams params = new BasicHttpParams();
 					HttpClientParams.setRedirecting(params, true);
@@ -71,9 +78,12 @@ public class HailCommunicator {
 							new BasicResponseHandler());
 					System.out.println("Status: response=" + response);
 					if (response != null) {
-						Gson gson = new Gson();
-						locations = gson
-								.fromJson(response, HailLocations.class);
+						locations = new HailLocations();
+						BasicUser[] users = gson.fromJson(response,
+								BasicUser[].class);
+						for (BasicUser user : users) {
+							locations.getLocations().add(user.getLocation());
+						}
 						hailActivity.getmHandler().post(mUpdateResults);
 					}
 				} catch (Exception e) {

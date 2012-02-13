@@ -21,8 +21,6 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected OverlayItem createItem(int i) {
-		System.out.println("Someone's axin about item #" + i + ": "
-				+ mOverlays.get(i));
 		return mOverlays.get(i);
 	}
 
@@ -38,7 +36,6 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected boolean onTap(int index) {
-		System.out.println("HailItemizedOverlay.onTap");
 		try {
 			OverlayItem item = mOverlays.get(index);
 			AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
@@ -52,8 +49,9 @@ public class HailItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	public void addOverlay(OverlayItem overlay) {
-		System.out.println("Someone's addin' a new item: " + overlay);
 		mOverlays.add(overlay);
+		// maybe we don't want to populate every time?.. or does this just
+		// invalidate and Android knows to own draw once we are done?
 		populate();
 	}
 }
