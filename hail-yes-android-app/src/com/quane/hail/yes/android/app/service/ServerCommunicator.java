@@ -20,46 +20,41 @@ import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.quane.hail.yes.HailLocations;
 import com.quane.hail.yes.StandardsResource;
-import com.quane.hail.yes.android.app.MainActivity;
+import com.quane.hail.yes.android.app.ui.MainController;
 import com.quane.hail.yes.user.BasicUser;
 
 public class ServerCommunicator {
 
+	private final MainController mainController;
+
 	private DefaultHttpClient httpClient;
-	private final MainActivity hailActivity;
 	private HailLocations locations;
 
-	// Create runnable for posting
-	final Runnable mUpdateResults = new Runnable() {
-		public void run() {
-			hailActivity.setLocations(locations);
-			updateResultsInUi();
-		}
-	};
+	private Gson gson = new Gson();
 
-	private void updateResultsInUi() {
-		hailActivity.setLocations(locations);
-	}
-
-	public ServerCommunicator(final MainActivity hailActivity) {
+	public ServerCommunicator(final MainController mainController) {
+		this.mainController = mainController;
 		httpClient = new DefaultHttpClient();
-		this.hailActivity = hailActivity;
-	}
-
-	public void registerAsRider() {
-		// TODO
 	}
 
 	public void registerAsDriver() {
 		// TODO
 	}
 
+	public void registerAsRider() {
+		// TODO
+	}
+
+	/**
+	 * Fetch the current state from the server.
+	 * 
+	 * @param location
+	 */
 	public void getCurrentState(final GeoPoint location) {
 		System.out.println("Status: contacting server");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					Gson gson = new Gson();
 					// Prepare the parameters
 					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
 					queryParams.add(new BasicNameValuePair("location",
@@ -85,7 +80,7 @@ public class ServerCommunicator {
 						for (BasicUser user : users) {
 							locations.getLocations().add(user.getLocation());
 						}
-						hailActivity.getmHandler().post(mUpdateResults);
+						mainController.redrawOverlay(locations.getLocations());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

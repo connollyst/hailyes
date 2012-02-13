@@ -5,21 +5,21 @@ import android.location.LocationListener;
 import android.os.Bundle;
 
 import com.google.android.maps.GeoPoint;
-import com.quane.hail.yes.android.app.MainActivity;
+import com.quane.hail.yes.android.app.ui.MainController;
 
 public class AppLocationListener implements LocationListener {
 
-	private MainActivity hailActivity;
+	private MainController mainController;
 
 	/**
-	 * Default constructor, requires access to the central HailActivity object
+	 * Default constructor, requires access to the central MainController object
 	 * so it can update the interface when necessary.
 	 * 
 	 * @param hailActivity
 	 */
-	public AppLocationListener(MainActivity hailActivity) {
+	public AppLocationListener(MainController mainController) {
 		super();
-		this.hailActivity = hailActivity;
+		this.mainController = mainController;
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class AppLocationListener implements LocationListener {
 		GeoPoint locationGeoPoint = new GeoPoint(
 				(int) (location.getLatitude() * 1000000),
 				(int) (location.getLongitude() * 1000000));
-//		hailActivity.updateMap(locationGeoPoint);
+		// hailActivity.updateMap(locationGeoPoint);
 	}
 
 	public void onProviderDisabled(String provider) {
