@@ -1,6 +1,7 @@
 package com.quane.hail.yes.android.app;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,15 +57,12 @@ public class HailCommunicator {
 			public void run() {
 				try {
 					// Prepare the parameters
-					List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-					qparams.add(new BasicNameValuePair("location", "{latitude:"
-							+ location.getLatitudeE6() + ",longitude:"
-							+ location.getLongitudeE6() + "}"));
-					URI uri = URIUtils.createURI("http",
-							"www.thanksforhavingsexwithme.com", 8080,
-							"/hailyes/services",
-							URLEncodedUtils.format(qparams, "UTF-8"), null);
-					HttpGet get = new HttpGet(uri);
+					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+					queryParams.add(new BasicNameValuePair("location",
+							"{latitude:" + location.getLatitudeE6()
+									+ ",longitude:" + location.getLongitudeE6()
+									+ "}"));
+					HttpGet get = new HttpGet(getURI(queryParams));
 					final HttpParams params = new BasicHttpParams();
 					HttpClientParams.setRedirecting(params, true);
 					get.setParams(params);
@@ -84,5 +82,12 @@ public class HailCommunicator {
 				System.out.println("Status: done");
 			}
 		}).start();
+	}
+
+	private URI getURI(List<NameValuePair> queryParams)
+			throws URISyntaxException {
+		return URIUtils.createURI("http", "www.thanksforhavingsexwithme.com",
+				8080, "/hailyes/services",
+				URLEncodedUtils.format(queryParams, "UTF-8"), null);
 	}
 }

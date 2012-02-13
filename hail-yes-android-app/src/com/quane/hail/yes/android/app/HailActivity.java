@@ -61,7 +61,7 @@ public class HailActivity extends MapActivity {
 		// Add the overlay layer
 		mapOverlays = mapView.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.androidmarker);
+				R.drawable.me_pin_32);
 		itemizedoverlay = new HailItemizedOverlay(drawable, this);
 		mapOverlays.add(itemizedoverlay);
 
