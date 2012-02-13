@@ -5,7 +5,9 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -36,11 +38,21 @@ public class MainActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(true);
+		mapView.setBuiltInZoomControls(false);
 		mapView.getController().setZoom(16);
 		// The main controller is responsible for coordinating all business
 		// logic back to us, start it up now
 		mainController = new MainController(this);
+	}
+
+	/**
+	 * Inflates the /res/menu/main.xml file when the app is ready.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
 	}
 
 	/**
@@ -51,12 +63,19 @@ public class MainActivity extends MapActivity {
 		return false;
 	}
 
-	/**
-	 * 
-	 * @param view
-	 */
-	public void onHailButtonClick(View view) {
-		mainController.onHailButtonClick();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// app icon in action bar clicked; not sure what we should do?
+			return true;
+		case R.id.hail_button:
+			// button clicked to hail, let's go!
+			mainController.onHailButtonClick();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/**

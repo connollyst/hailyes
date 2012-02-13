@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/hail_button"
+        android:showAsAction="ifRoom"
+        android:title="@string/hail_button_text"/>
+
+</menu>
