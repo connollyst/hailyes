@@ -8,17 +8,31 @@ import com.quane.hail.yes.SimpleLocation;
 public class User {
 
 	public enum UserType {
-		DRIVER, PASSENGER
+		DRIVER, PASSENGER, UNKNOWN
 	}
 
-	private UserType type;
 	private UUID id;
+	private UserType type;
+	private boolean isMe;
 	private SimpleLocation location;
 	private List<User> neighbors;
+
+	public User() {
+		this(UserType.UNKNOWN);
+	}
 
 	public User(UserType type) {
 		super();
 		this.type = type;
+		this.isMe = false;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public UserType getType() {
@@ -29,12 +43,12 @@ public class User {
 		this.type = type;
 	}
 
-	public UUID getId() {
-		return id;
+	public boolean isMe() {
+		return isMe;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setIsMe(boolean isMe) {
+		this.isMe = isMe;
 	}
 
 	public SimpleLocation getLocation() {
@@ -51,6 +65,14 @@ public class User {
 
 	public void setNeighbors(List<User> neighbors) {
 		this.neighbors = neighbors;
+	}
+
+	public boolean isDriver() {
+		return type.equals(UserType.DRIVER);
+	}
+
+	public boolean isPassenger() {
+		return type.equals(UserType.PASSENGER);
 	}
 
 	@Override
