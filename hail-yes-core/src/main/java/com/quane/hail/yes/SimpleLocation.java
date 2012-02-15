@@ -5,17 +5,17 @@ package com.quane.hail.yes;
  * 
  * @author Sean Connolly
  */
-public class HailLocation {
+public class SimpleLocation {
 
 	private double latitude;
 	private double longitude;
 
-	public HailLocation(double latitude, double longitude) {
+	public SimpleLocation(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
-	public HailLocation(int latitudeE6, int longitudeE6) {
+	public SimpleLocation(int latitudeE6, int longitudeE6) {
 		setLatitudeE6(latitudeE6);
 		setLongitudeE6(longitudeE6);
 	}
@@ -72,7 +72,7 @@ public class HailLocation {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HailLocation other = (HailLocation) obj;
+		SimpleLocation other = (SimpleLocation) obj;
 		if (Double.doubleToLongBits(latitude) != Double
 				.doubleToLongBits(other.latitude))
 			return false;

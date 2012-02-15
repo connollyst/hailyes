@@ -13,14 +13,14 @@ public class TestHailLocation {
 
 	@Test
 	public void testGetLatitudeE6() {
-		HailLocation loc = new HailLocation(TEST_LATITUDE, TEST_LONGITUDE);
+		SimpleLocation loc = new SimpleLocation(TEST_LATITUDE, TEST_LONGITUDE);
 		int latE6 = loc.getLatitudeE6();
 		assertTrue(TEST_LATITUDE_E6 == latE6);
 	}
 
 	@Test
 	public void testSetLatitudeE6() {
-		HailLocation loc = new HailLocation(0, 0);
+		SimpleLocation loc = new SimpleLocation(0, 0);
 		loc.setLatitudeE6(TEST_LATITUDE_E6);
 		double lat = loc.getLatitude();
 		assertTrue(TEST_LATITUDE == lat);
@@ -28,14 +28,14 @@ public class TestHailLocation {
 
 	@Test
 	public void testGetLongitudeE6() {
-		HailLocation loc = new HailLocation(TEST_LATITUDE, TEST_LONGITUDE);
+		SimpleLocation loc = new SimpleLocation(TEST_LATITUDE, TEST_LONGITUDE);
 		int lonE6 = loc.getLongitudeE6();
 		assertTrue(TEST_LONGITUDE_E6 == lonE6);
 	}
 
 	@Test
 	public void testSetLongitudeE6() {
-		HailLocation loc = new HailLocation(0, 0);
+		SimpleLocation loc = new SimpleLocation(0, 0);
 		loc.setLongitudeE6(TEST_LONGITUDE_E6);
 		double lon = loc.getLongitude();
 		assertTrue(TEST_LONGITUDE == lon);

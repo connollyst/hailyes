@@ -1,15 +1,27 @@
-package com.quane.hail.yes.user;
+package com.quane.hail.yes;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.quane.hail.yes.HailLocation;
 
-public class BasicUser {
+public class User {
 
+	private enum UserType {
+		DRIVER, PASSENGER
+	}
+
+	private UserType type;
 	private UUID id;
-	private HailLocation location;
-	private List<BasicUser> neighbors;
+	private SimpleLocation location;
+	private List<User> neighbors;
+
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
 
 	public UUID getId() {
 		return id;
@@ -19,19 +31,19 @@ public class BasicUser {
 		this.id = id;
 	}
 
-	public HailLocation getLocation() {
+	public SimpleLocation getLocation() {
 		return location;
 	}
 
-	public void setLocation(HailLocation location) {
+	public void setLocation(SimpleLocation location) {
 		this.location = location;
 	}
 
-	public List<BasicUser> getNeighbors() {
+	public List<User> getNeighbors() {
 		return neighbors;
 	}
 
-	public void setNeighbors(List<BasicUser> neighbors) {
+	public void setNeighbors(List<User> neighbors) {
 		this.neighbors = neighbors;
 	}
 
@@ -51,7 +63,7 @@ public class BasicUser {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BasicUser other = (BasicUser) obj;
+		User other = (User) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

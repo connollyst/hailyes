@@ -1,4 +1,4 @@
-package com.quane.hail.yes;
+package com.quane.hail.yes.resource;
 
 public class StandardsResource {
 
