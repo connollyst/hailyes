@@ -102,8 +102,9 @@ public class MainController {
 		SimpleLocation myLocation = new SimpleLocation(0, 0);
 		myLocation.setLatitudeE6(initialLocation.getLatitudeE6());
 		myLocation.setLongitudeE6(initialLocation.getLongitudeE6());
-		me = new UserPassenger();
+		me = new UserPassenger(); // TODO
 		me.setLocation(myLocation);
+		me.setIsMe(true);
 
 		// Draw the overlay
 		redrawOverlay();

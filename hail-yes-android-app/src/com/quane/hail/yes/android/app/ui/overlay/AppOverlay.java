@@ -31,13 +31,9 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 		this.driverPin = driverPin;
 		this.passengerPin = passengerPin;
 
-		this.mePin.setBounds(0, 0, this.mePin.getIntrinsicWidth(),
-				this.mePin.getIntrinsicHeight());
-		this.driverPin.setBounds(0, 0, this.driverPin.getIntrinsicWidth(),
-				this.driverPin.getIntrinsicHeight());
-		this.passengerPin.setBounds(0, 0,
-				this.passengerPin.getIntrinsicWidth(),
-				this.passengerPin.getIntrinsicHeight());
+		setMarkerBounds(this.mePin);
+		setMarkerBounds(this.driverPin);
+		setMarkerBounds(this.passengerPin);
 	}
 
 	@Override
@@ -63,10 +59,15 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 				+ " & " + location.getLongitude() + ")");
 		OverlayItem item = new OverlayItem(point, user.getType().toString(),
 				"Snippet");
-		if (user.isDriver()) {
+		if (user.isMe()) {
+			item.setMarker(mePin);
+		} else if (user.isDriver()) {
 			item.setMarker(driverPin);
 		} else if (user.isPassenger()) {
 			item.setMarker(passengerPin);
+		} else {
+			Log.e(TAG, "Cannot render an overlay item for "
+					+ user.getType().toString());
 		}
 		addOverlayItem(item);
 	}
@@ -79,4 +80,9 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 
+	private void setMarkerBounds(Drawable drawable) {
+		int w = drawable.getIntrinsicWidth();
+		int h = drawable.getIntrinsicHeight();
+		drawable.setBounds(-w / 2, -h, w / 2, 0);
+	}
 }
