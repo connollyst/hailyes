@@ -15,6 +15,7 @@ import com.google.android.maps.OverlayItem;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.android.app.MainActivity;
 import com.quane.hail.yes.android.app.service.AppLocationListener;
+import com.quane.hail.yes.android.app.service.ScheduledUpdater;
 import com.quane.hail.yes.android.app.service.ServerCommunicator;
 import com.quane.hail.yes.android.app.ui.overlay.AppOverlay;
 
@@ -26,6 +27,7 @@ public class MainController {
 
 	private LocationManager locationManager;
 	private LocationListener locationListener;
+	private ScheduledUpdater scheduledUpdater;
 
 	private AppOverlay mapOverlay;
 
@@ -71,14 +73,15 @@ public class MainController {
 		mainActivity.getMapViewOverlays().add(mapOverlay);
 
 		// Center on the last known location
-		GeoPoint initialLocation = getLastKnownGeoPoint();
+		HailLocation initialLocation = getLastKnownLocation();
 		if (initialLocation == null) {
 			// TODO
 			System.err.println("There is no last known location, can't"
 					+ " initialize the map.");
-			initialLocation = new GeoPoint(19240000, -99120000);
+			initialLocation = new HailLocation(0, 0);
 		}
-		mainActivity.centerMap(initialLocation);
+		mainActivity.centerMap(new GeoPoint(initialLocation.getLatitudeE6(),
+				initialLocation.getLongitudeE6()));
 
 		// Set my location for the overlay
 		myLocation = new HailLocation(0, 0);
@@ -87,6 +90,10 @@ public class MainController {
 
 		// Draw the overlay
 		redrawOverlay();
+
+		// Start up a scheduled updater to continually poll the server
+		scheduledUpdater = new ScheduledUpdater(this);
+		scheduledUpdater.start();
 	}
 
 	/**
@@ -150,29 +157,27 @@ public class MainController {
 	 * 
 	 */
 	public void onHailButtonClick() {
-		GeoPoint lastKnownGeoPoint = getLastKnownGeoPoint();
+		HailLocation lastKnownGeoPoint = getLastKnownLocation();
 		ServerCommunicator communicator = new ServerCommunicator(this);
-		communicator.getCurrentState(lastKnownGeoPoint);
+		communicator.getNeighbors(lastKnownGeoPoint);
 	}
 
 	/**
 	 * 
-	 * @return the last known GeoPoint, or null if none exists
+	 * @return the last known location, or null if none exists
 	 */
-	private GeoPoint getLastKnownGeoPoint() {
-		GeoPoint lastKnownGeoPoint = null;
+	private HailLocation getLastKnownLocation() {
+		HailLocation simpleLocation = null;
 		Location lastKnownLocation = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (lastKnownLocation != null) {
-			int lastKnownLatitute = (int) (lastKnownLocation.getLatitude() * 1E6);
-			int lastKnownLongitude = (int) (lastKnownLocation.getLongitude() * 1E6);
-			lastKnownGeoPoint = new GeoPoint(lastKnownLatitute,
-					lastKnownLongitude);
+			simpleLocation = new HailLocation(lastKnownLocation.getLatitude(),
+					lastKnownLocation.getLongitude());
 		} else {
 			System.err.println("No last known location..."
 					+ " we don't know where we are!?");
 		}
-		return lastKnownGeoPoint;
+		return simpleLocation;
 	}
 
 	/**
@@ -185,5 +190,26 @@ public class MainController {
 	 */
 	public Handler getActivityHandler() {
 		return mainActivity.getHandler();
+	}
+
+	/**
+	 * Get the current location of the app user.
+	 * 
+	 * @return the current location
+	 */
+	public HailLocation getMyLocation() {
+		return myLocation;
+	}
+
+	/**
+	 * Set the current location of the app user.<br/>
+	 * Puts in a request to the UI to reflect the changes.
+	 * 
+	 * @param myLocation
+	 *            the current location
+	 */
+	public void setMyLocation(HailLocation myLocation) {
+		this.myLocation = myLocation;
+		getActivityHandler().post(runnableRedrawOverlay);
 	}
 }

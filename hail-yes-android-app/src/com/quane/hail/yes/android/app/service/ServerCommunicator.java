@@ -16,8 +16,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
-import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
+import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.HailLocations;
 import com.quane.hail.yes.StandardsResource;
 import com.quane.hail.yes.android.app.ui.MainController;
@@ -28,7 +28,6 @@ public class ServerCommunicator {
 	private final MainController mainController;
 
 	private DefaultHttpClient httpClient;
-	private HailLocations locations;
 
 	private Gson gson = new Gson();
 
@@ -37,20 +36,12 @@ public class ServerCommunicator {
 		httpClient = new DefaultHttpClient();
 	}
 
-	public void registerAsDriver() {
-		// TODO
-	}
-
-	public void registerAsRider() {
-		// TODO
-	}
-
 	/**
-	 * Fetch the current state from the server.
+	 * Fetch the current state from the server within
 	 * 
 	 * @param location
 	 */
-	public void getCurrentState(final GeoPoint location) {
+	public void getNeighbors(final HailLocation location) {
 		System.out.println("Status: contacting server");
 		new Thread(new Runnable() {
 			public void run() {
@@ -74,7 +65,7 @@ public class ServerCommunicator {
 							new BasicResponseHandler());
 					System.out.println("Status: response=" + response);
 					if (response != null) {
-						locations = new HailLocations();
+						HailLocations locations = new HailLocations();
 						BasicUser[] users = gson.fromJson(response,
 								BasicUser[].class);
 						for (BasicUser user : users) {
@@ -90,6 +81,12 @@ public class ServerCommunicator {
 		}).start();
 	}
 
+	/**
+	 * 
+	 * @param queryParams
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	private URI getURI(List<NameValuePair> queryParams)
 			throws URISyntaxException {
 		return URIUtils.createURI("http", "www.thanksforhavingsexwithme.com",
