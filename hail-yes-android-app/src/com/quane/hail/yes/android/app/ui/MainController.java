@@ -111,6 +111,7 @@ public class MainController {
 
 		// Start up a scheduled updater to continually poll the server
 		scheduledUpdater = new ScheduledUpdater(this);
+		scheduledUpdater.start();
 	}
 
 	/**
@@ -163,12 +164,13 @@ public class MainController {
 	/**
 	 * Event handler for when the 'Hail!' button is clicked.<br/>
 	 * 
+	 * 
 	 */
 	public void onHailButtonClick() {
-		if (scheduledUpdater.isRunning()) {
-			scheduledUpdater.stop();
+		if (me.isSearching()) {
+			communicator.unregisterMyself(me);
 		} else {
-			scheduledUpdater.start();
+			communicator.registerMyself(me);
 		}
 	}
 

@@ -41,9 +41,48 @@ public class ServerCommunicator {
 	}
 
 	/**
-	 * Fetch the current state from the server within
+	 * Let the server know that the current user is now looking for a cab.
 	 * 
-	 * @param location
+	 * @param me
+	 *            the current user
+	 */
+	public void registerMyself(User me) {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * Let the server know that the current user is no longer looking for a cab
+	 * or fare.
+	 * 
+	 * @param me
+	 *            the current user
+	 */
+	public void unregisterMyself(User me) {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * Fetch the list of neighbors from the server within range of the current
+	 * user.
+	 * 
+	 * @param me
+	 *            the current user
 	 */
 	public void getNeighbors(User me) {
 		Log.v(TAG, "Status: contacting server");
