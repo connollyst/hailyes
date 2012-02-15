@@ -14,7 +14,7 @@ import com.quane.hail.yes.user.Rider;
  * 
  * @author Sean Connolly
  */
-public class HailDAO {
+public class RandomPointDAO implements IDataAccessObject {
 
 	private static final Random generator = new Random();
 	private UserList userList = new UserList();

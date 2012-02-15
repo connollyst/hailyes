@@ -15,7 +15,8 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.data.HailDAO;
+import com.quane.hail.yes.data.RandomPointDAO;
+import com.quane.hail.yes.data.IDataAccessObject;
 import com.quane.hail.yes.exception.HailYesException;
 import com.quane.hail.yes.exception.MissingLocationException;
 import com.quane.hail.yes.exception.MissingUserException;
@@ -36,7 +37,7 @@ public class HailServiceServlet extends HttpServlet {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private HailDAO dao = new HailDAO();
+	private IDataAccessObject dao = new RandomPointDAO();
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
