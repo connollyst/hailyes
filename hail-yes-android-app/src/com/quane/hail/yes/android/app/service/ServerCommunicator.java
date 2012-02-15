@@ -17,11 +17,10 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
 import com.google.gson.Gson;
-import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.HailLocations;
-import com.quane.hail.yes.StandardsResource;
+import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.ui.MainController;
-import com.quane.hail.yes.user.BasicUser;
+import com.quane.hail.yes.resource.StandardsResource;
+import com.quane.hail.yes.user.User;
 
 public class ServerCommunicator {
 
@@ -41,7 +40,7 @@ public class ServerCommunicator {
 	 * 
 	 * @param location
 	 */
-	public void getNeighbors(final HailLocation location) {
+	public void getNeighbors(final SimpleLocation location) {
 		System.out.println("Status: contacting server");
 		new Thread(new Runnable() {
 			public void run() {
@@ -65,13 +64,12 @@ public class ServerCommunicator {
 							new BasicResponseHandler());
 					System.out.println("Status: response=" + response);
 					if (response != null) {
-						HailLocations locations = new HailLocations();
-						BasicUser[] users = gson.fromJson(response,
-								BasicUser[].class);
-						for (BasicUser user : users) {
-							locations.getLocations().add(user.getLocation());
+						List<SimpleLocation> locations = new ArrayList<SimpleLocation>();
+						User[] users = gson.fromJson(response, User[].class);
+						for (User user : users) {
+							locations.add(user.getLocation());
 						}
-						mainController.redrawOverlay(locations.getLocations());
+						mainController.redrawOverlay(locations);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
-import com.quane.hail.yes.HailLocation;
+import com.quane.hail.yes.SimpleLocation;
 
 public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 
@@ -29,7 +29,7 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public void addOverlayItem(OverlayItem overlay) {
 		items.add(overlay);
-	    populate();
+		populate();
 	}
 
 	public void addOverlayItem(GeoPoint point) {
@@ -39,7 +39,7 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 		addOverlayItem(item);
 	}
 
-	public void addOverlayItem(HailLocation location) {
+	public void addOverlayItem(SimpleLocation location) {
 		System.out.println("Drawing my location @ " + location.getLatitude()
 				+ " & " + location.getLongitude());
 		GeoPoint point = new GeoPoint(location.getLongitudeE6(),

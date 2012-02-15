@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
-import com.quane.hail.yes.HailLocation;
+import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.MainActivity;
 import com.quane.hail.yes.android.app.service.AppLocationListener;
 import com.quane.hail.yes.android.app.service.ScheduledUpdater;
@@ -31,8 +31,8 @@ public class MainController {
 
 	private AppOverlay mapOverlay;
 
-	private HailLocation myLocation;
-	private List<HailLocation> otherLocations;
+	private SimpleLocation myLocation;
+	private List<SimpleLocation> otherLocations;
 
 	// A runnable for executing the private redrawOverlay function in the UI
 	// thread
@@ -73,18 +73,18 @@ public class MainController {
 		mainActivity.getMapViewOverlays().add(mapOverlay);
 
 		// Center on the last known location
-		HailLocation initialLocation = getLastKnownLocation();
+		SimpleLocation initialLocation = getLastKnownLocation();
 		if (initialLocation == null) {
 			// TODO
 			System.err.println("There is no last known location, can't"
 					+ " initialize the map.");
-			initialLocation = new HailLocation(0, 0);
+			initialLocation = new SimpleLocation(0, 0);
 		}
 		mainActivity.centerMap(new GeoPoint(initialLocation.getLatitudeE6(),
 				initialLocation.getLongitudeE6()));
 
 		// Set my location for the overlay
-		myLocation = new HailLocation(0, 0);
+		myLocation = new SimpleLocation(0, 0);
 		myLocation.setLatitudeE6(initialLocation.getLatitudeE6());
 		myLocation.setLongitudeE6(initialLocation.getLongitudeE6());
 
@@ -104,7 +104,7 @@ public class MainController {
 	 * @param locations
 	 *            the new list of locations for drivers and riders
 	 */
-	public void redrawOverlay(List<HailLocation> locations) {
+	public void redrawOverlay(List<SimpleLocation> locations) {
 		otherLocations = locations;
 		getActivityHandler().post(runnableRedrawOverlay);
 	}
@@ -139,7 +139,7 @@ public class MainController {
 		if (otherLocations == null || otherLocations.isEmpty()) {
 			System.err.println("Given no locations to set.");
 		} else {
-			for (HailLocation location : otherLocations) {
+			for (SimpleLocation location : otherLocations) {
 				System.out.println("Drawing other location @ "
 						+ location.getLatitude() + " & "
 						+ location.getLongitude());
@@ -157,7 +157,7 @@ public class MainController {
 	 * 
 	 */
 	public void onHailButtonClick() {
-		HailLocation lastKnownGeoPoint = getLastKnownLocation();
+		SimpleLocation lastKnownGeoPoint = getLastKnownLocation();
 		ServerCommunicator communicator = new ServerCommunicator(this);
 		communicator.getNeighbors(lastKnownGeoPoint);
 	}
@@ -166,12 +166,13 @@ public class MainController {
 	 * 
 	 * @return the last known location, or null if none exists
 	 */
-	private HailLocation getLastKnownLocation() {
-		HailLocation simpleLocation = null;
+	private SimpleLocation getLastKnownLocation() {
+		SimpleLocation simpleLocation = null;
 		Location lastKnownLocation = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (lastKnownLocation != null) {
-			simpleLocation = new HailLocation(lastKnownLocation.getLatitude(),
+			simpleLocation = new SimpleLocation(
+					lastKnownLocation.getLatitude(),
 					lastKnownLocation.getLongitude());
 		} else {
 			System.err.println("No last known location..."
@@ -197,7 +198,7 @@ public class MainController {
 	 * 
 	 * @return the current location
 	 */
-	public HailLocation getMyLocation() {
+	public SimpleLocation getMyLocation() {
 		return myLocation;
 	}
 
@@ -208,7 +209,7 @@ public class MainController {
 	 * @param myLocation
 	 *            the current location
 	 */
-	public void setMyLocation(HailLocation myLocation) {
+	public void setMyLocation(SimpleLocation myLocation) {
 		this.myLocation = myLocation;
 		getActivityHandler().post(runnableRedrawOverlay);
 	}
