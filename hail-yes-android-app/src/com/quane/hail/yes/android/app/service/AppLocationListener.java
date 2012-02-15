@@ -3,11 +3,14 @@ package com.quane.hail.yes.android.app.service;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.ui.MainController;
 
 public class AppLocationListener implements LocationListener {
+
+	private static final String TAG = AppLocationListener.class.getSimpleName();
 
 	private MainController mainController;
 
@@ -30,6 +33,7 @@ public class AppLocationListener implements LocationListener {
 	 *            the new location
 	 */
 	public void onLocationChanged(Location location) {
+		Log.v(TAG, "The device's location has changed, updating my location..");
 		mainController.setMyLocation(new SimpleLocation(location.getLatitude(),
 				location.getLongitude()));
 	}

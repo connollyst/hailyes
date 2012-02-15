@@ -16,6 +16,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.ui.MainController;
@@ -23,6 +25,8 @@ import com.quane.hail.yes.resource.StandardsResource;
 import com.quane.hail.yes.user.User;
 
 public class ServerCommunicator {
+
+	private static final String TAG = ServerCommunicator.class.getSimpleName();
 
 	private final MainController mainController;
 
@@ -41,7 +45,7 @@ public class ServerCommunicator {
 	 * @param location
 	 */
 	public void getNeighbors(final SimpleLocation location) {
-		System.out.println("Status: contacting server");
+		Log.v(TAG, "Status: contacting server");
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -59,10 +63,10 @@ public class ServerCommunicator {
 					final HttpParams params = new BasicHttpParams();
 					HttpClientParams.setRedirecting(params, true);
 					get.setParams(params);
-					System.out.println("Status: calling url: " + get.getURI());
+					Log.v(TAG, "Status: calling url: " + get.getURI());
 					String response = httpClient.execute(get,
 							new BasicResponseHandler());
-					System.out.println("Status: response=" + response);
+					Log.v(TAG, "Status: response=" + response);
 					if (response != null) {
 						List<SimpleLocation> locations = new ArrayList<SimpleLocation>();
 						User[] users = gson.fromJson(response, User[].class);
@@ -74,7 +78,7 @@ public class ServerCommunicator {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				System.out.println("Status: done");
+				Log.v(TAG, "Status: done");
 			}
 		}).start();
 	}
