@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
@@ -22,7 +23,6 @@ import org.apache.http.message.BasicNameValuePair;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.ui.MainController;
 import com.quane.hail.yes.resource.StandardsResource;
 import com.quane.hail.yes.user.User;
@@ -136,11 +136,9 @@ public class ServerCommunicator {
 			throws URISyntaxException, ClientProtocolException, IOException,
 			Exception {
 		// Prepare the parameters
-		SimpleLocation myLocation = me.getLocation();
 		List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-		queryParams.add(new BasicNameValuePair("location", "{latitude:"
-				+ (myLocation.getLatitudeE6() / 1E6) + ",longitude:"
-				+ (myLocation.getLongitudeE6() / 1E6) + "}"));
+		queryParams.add(new BasicNameValuePair("user", gson.toJson(me,
+				User.class)));
 		queryParams
 				.add(new BasicNameValuePair(
 						StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
@@ -162,11 +160,23 @@ public class ServerCommunicator {
 			throw new Exception("The method '" + action + "' is not supported!");
 		}
 		// Execute the request and return the response
-		Log.v(TAG, "Calling url: " + request.getURI());
-		String response = httpClient.execute(request,
-				new BasicResponseHandler());
-		Log.v(TAG, "Response=" + response);
-		return response;
+		try {
+			Log.v(TAG, "Calling url: " + request.getURI());
+			String response = httpClient.execute(request,
+					new BasicResponseHandler());
+			Log.v(TAG, "Response=" + response);
+			return response;
+		} catch (HttpResponseException re) {
+			switch (re.getStatusCode()) {
+			case 500:
+				throw new Exception(re.getStatusCode() + ": "
+						+ "The server couldn't interpret the request!", re);
+			default:
+				throw new Exception(re.getStatusCode() + ": "
+						+ re.getLocalizedMessage(), re);
+			}
+
+		}
 	}
 
 	/**
