@@ -150,6 +150,7 @@ public class MainController {
 			}
 		}
 		mapOverlay.populateOverlay();
+		mainActivity.invalidateMapView();
 	}
 
 	/**
