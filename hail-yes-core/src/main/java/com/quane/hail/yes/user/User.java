@@ -1,12 +1,13 @@
-package com.quane.hail.yes;
+package com.quane.hail.yes.user;
 
 import java.util.List;
 import java.util.UUID;
 
+import com.quane.hail.yes.SimpleLocation;
 
 public class User {
 
-	private enum UserType {
+	public enum UserType {
 		DRIVER, PASSENGER
 	}
 
@@ -14,6 +15,11 @@ public class User {
 	private UUID id;
 	private SimpleLocation location;
 	private List<User> neighbors;
+
+	public User(UserType type) {
+		super();
+		this.type = type;
+	}
 
 	public UserType getType() {
 		return type;
