@@ -99,9 +99,9 @@ public class MainController {
 				initialLocation.getLongitudeE6()));
 
 		// Set my location for the overlay
-		SimpleLocation myLocation = new SimpleLocation(0, 0);
-		myLocation.setLatitudeE6(initialLocation.getLatitudeE6());
-		myLocation.setLongitudeE6(initialLocation.getLongitudeE6());
+		SimpleLocation myLocation = new SimpleLocation(
+				initialLocation.getLatitudeE6(),
+				initialLocation.getLongitudeE6());
 		me = new UserPassenger(); // TODO
 		me.setLocation(myLocation);
 		me.setIsMe(true);
@@ -111,7 +111,6 @@ public class MainController {
 
 		// Start up a scheduled updater to continually poll the server
 		scheduledUpdater = new ScheduledUpdater(this);
-		scheduledUpdater.start();
 	}
 
 	/**
@@ -166,7 +165,11 @@ public class MainController {
 	 * 
 	 */
 	public void onHailButtonClick() {
-		communicator.getNeighbors(me);
+		if (scheduledUpdater.isRunning()) {
+			scheduledUpdater.stop();
+		} else {
+			scheduledUpdater.start();
+		}
 	}
 
 	/**
