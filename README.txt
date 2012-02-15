@@ -1,3 +1,6 @@
+- Queries should be queued on the client.
+	- If I send a request while moving, and then a timed request comes through, the latter should wait.
+
 - Register self on server
 	- do we already have a uuid for this user?
 		- yes:
