@@ -14,6 +14,7 @@ public class User {
 	private UUID id;
 	private UserType type;
 	private boolean isMe;
+	private boolean isSearching;
 	private SimpleLocation location;
 	private List<User> neighbors;
 
@@ -25,6 +26,7 @@ public class User {
 		super();
 		this.type = type;
 		this.isMe = false;
+		this.isSearching = false;
 	}
 
 	public UUID getId() {
@@ -49,6 +51,14 @@ public class User {
 
 	public void setIsMe(boolean isMe) {
 		this.isMe = isMe;
+	}
+
+	public boolean isSearching() {
+		return isSearching;
+	}
+
+	public void setIsSearching(boolean isSearching) {
+		this.isSearching = isSearching;
 	}
 
 	public SimpleLocation getLocation() {
