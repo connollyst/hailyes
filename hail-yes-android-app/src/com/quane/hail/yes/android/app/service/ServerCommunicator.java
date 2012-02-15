@@ -3,6 +3,7 @@ package com.quane.hail.yes.android.app.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -44,17 +45,22 @@ public class ServerCommunicator {
 	 * 
 	 * @param location
 	 */
-	public void getNeighbors(final SimpleLocation location) {
+	public void getNeighbors(User me) {
 		Log.v(TAG, "Status: contacting server");
+		final SimpleLocation myLocation = me.getLocation();
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					// Prepare the parameters
 					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-					queryParams.add(new BasicNameValuePair("location",
-							"{latitude:" + (location.getLatitudeE6() / 1E6)
-									+ ",longitude:"
-									+ (location.getLongitudeE6() / 1E6) + "}"));
+					queryParams
+							.add(new BasicNameValuePair(
+									"location",
+									"{latitude:"
+											+ (myLocation.getLatitudeE6() / 1E6)
+											+ ",longitude:"
+											+ (myLocation.getLongitudeE6() / 1E6)
+											+ "}"));
 					queryParams
 							.add(new BasicNameValuePair(
 									StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
@@ -68,12 +74,8 @@ public class ServerCommunicator {
 							new BasicResponseHandler());
 					Log.v(TAG, "Status: response=" + response);
 					if (response != null) {
-						List<SimpleLocation> locations = new ArrayList<SimpleLocation>();
 						User[] users = gson.fromJson(response, User[].class);
-						for (User user : users) {
-							locations.add(user.getLocation());
-						}
-						mainController.redrawOverlay(locations);
+						mainController.redrawOverlay(Arrays.asList(users));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -1,5 +1,6 @@
+==============
 Outline
-=======
+==============
 
 com.quane.hail.yes.android.app
 	MainActivity - The main activity, see cabs, people, and hail for a cab
@@ -18,4 +19,8 @@ com.quane.hail.yes.android.app.service
 	ServerCommunicator - Solely responsible for all communication with the server
 	AppLocationListener - Listens for GPS updates from the phone, including enabling/disabling
 	Timer - Queries the server for updates on a schedule to keep the local data up to date
-	
+
+==============
+TODO
+==============
+May be able to improve performance by not invalidating the overlay all the time.  

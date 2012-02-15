@@ -110,6 +110,14 @@ public class MainActivity extends MapActivity {
 		return this.getResources().getDrawable(R.drawable.me_pin_32);
 	}
 
+	public Drawable getDrawableDriverPin() {
+		return this.getResources().getDrawable(R.drawable.cab_pin_32);
+	}
+
+	public Drawable getDrawablePassengerPin() {
+		return this.getResources().getDrawable(R.drawable.me_pin_32);
+	}
+
 	/**
 	 * 
 	 * @return

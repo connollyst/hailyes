@@ -9,15 +9,35 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 import com.quane.hail.yes.SimpleLocation;
+import com.quane.hail.yes.user.User;
 
+/**
+ * 
+ * @author Sean Connolly
+ */
 public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private static final String TAG = AppOverlay.class.getSimpleName();
 
 	private ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
-	public AppOverlay(Drawable defaultMarker) {
-		super(boundCenterBottom(defaultMarker));
+	private Drawable mePin;
+	private Drawable driverPin;
+	private Drawable passengerPin;
+
+	public AppOverlay(Drawable mePin, Drawable driverPin, Drawable passengerPin) {
+		super(boundCenterBottom(mePin));
+		this.mePin = mePin;
+		this.driverPin = driverPin;
+		this.passengerPin = passengerPin;
+
+		this.mePin.setBounds(0, 0, this.mePin.getIntrinsicWidth(),
+				this.mePin.getIntrinsicHeight());
+		this.driverPin.setBounds(0, 0, this.driverPin.getIntrinsicWidth(),
+				this.driverPin.getIntrinsicHeight());
+		this.passengerPin.setBounds(0, 0,
+				this.passengerPin.getIntrinsicWidth(),
+				this.passengerPin.getIntrinsicHeight());
 	}
 
 	@Override
@@ -30,21 +50,24 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 		return items.size();
 	}
 
-	public void addOverlayItem(OverlayItem overlay) {
+	private void addOverlayItem(OverlayItem overlay) {
 		items.add(overlay);
-		populate();
 	}
 
-	public void addOverlayItem(SimpleLocation location) {
-		GeoPoint point = new GeoPoint(location.getLongitudeE6(),
-				location.getLatitudeE6());
-		addOverlayItem(point);
-	}
-
-	public void addOverlayItem(GeoPoint point) {
+	public void addOverlayItem(User user) {
+		SimpleLocation location = user.getLocation();
+		GeoPoint point = new GeoPoint(location.getLatitudeE6(),
+				location.getLongitudeE6());
 		Log.v(TAG, "Drawing location @ " + point.getLatitudeE6() + " & "
-				+ point.getLongitudeE6());
-		OverlayItem item = new OverlayItem(point, "Title", "Snippet");
+				+ point.getLongitudeE6() + " .. (" + location.getLatitude()
+				+ " & " + location.getLongitude() + ")");
+		OverlayItem item = new OverlayItem(point, user.getType().toString(),
+				"Snippet");
+		if (user.isDriver()) {
+			item.setMarker(driverPin);
+		} else if (user.isPassenger()) {
+			item.setMarker(passengerPin);
+		}
 		addOverlayItem(item);
 	}
 

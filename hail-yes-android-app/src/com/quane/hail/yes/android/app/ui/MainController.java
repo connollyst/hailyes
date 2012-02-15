@@ -3,7 +3,6 @@ package com.quane.hail.yes.android.app.ui;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,14 +10,19 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
 import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.android.app.MainActivity;
 import com.quane.hail.yes.android.app.service.AppLocationListener;
 import com.quane.hail.yes.android.app.service.ScheduledUpdater;
 import com.quane.hail.yes.android.app.service.ServerCommunicator;
 import com.quane.hail.yes.android.app.ui.overlay.AppOverlay;
+import com.quane.hail.yes.user.User;
+import com.quane.hail.yes.user.UserPassenger;
 
+/**
+ * 
+ * @author Sean Connolly
+ */
 public class MainController {
 
 	private static final String TAG = MainController.class.getSimpleName();
@@ -28,11 +32,12 @@ public class MainController {
 	private LocationManager locationManager;
 	private LocationListener locationListener;
 	private ScheduledUpdater scheduledUpdater;
+	private ServerCommunicator communicator;
 
 	private AppOverlay mapOverlay;
 
-	private SimpleLocation myLocation;
-	private List<SimpleLocation> otherLocations;
+	private User me;
+	private List<User> neighbors;
 
 	// A runnable for executing the private redrawOverlay function in the UI
 	// thread
@@ -49,8 +54,16 @@ public class MainController {
 	 */
 	public MainController(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
+		initServerCommunicator();
 		initLocationManager();
 		initOverlay();
+	}
+
+	/**
+	 * 
+	 */
+	public void initServerCommunicator() {
+		communicator = new ServerCommunicator(this);
 	}
 
 	/**
@@ -68,8 +81,10 @@ public class MainController {
 	 * Create and initialize the overlay layer
 	 */
 	public void initOverlay() {
-		Drawable drawable = mainActivity.getDrawableMePin();
-		mapOverlay = new AppOverlay(drawable);
+
+		mapOverlay = new AppOverlay(mainActivity.getDrawableMePin(),
+				mainActivity.getDrawableDriverPin(),
+				mainActivity.getDrawablePassengerPin());
 		mainActivity.getMapViewOverlays().add(mapOverlay);
 
 		// Center on the last known location
@@ -84,9 +99,11 @@ public class MainController {
 				initialLocation.getLongitudeE6()));
 
 		// Set my location for the overlay
-		myLocation = new SimpleLocation(0, 0);
+		SimpleLocation myLocation = new SimpleLocation(0, 0);
 		myLocation.setLatitudeE6(initialLocation.getLatitudeE6());
 		myLocation.setLongitudeE6(initialLocation.getLongitudeE6());
+		me = new UserPassenger();
+		me.setLocation(myLocation);
 
 		// Draw the overlay
 		redrawOverlay();
@@ -104,8 +121,8 @@ public class MainController {
 	 * @param locations
 	 *            the new list of locations for drivers and riders
 	 */
-	public void redrawOverlay(List<SimpleLocation> locations) {
-		otherLocations = locations;
+	public void redrawOverlay(List<User> users) {
+		neighbors = users;
 		getActivityHandler().post(runnableRedrawOverlay);
 	}
 
@@ -117,38 +134,28 @@ public class MainController {
 	 * OverlayItems unless we need to and by just updating the coordinates of
 	 * any existing points.. can that be done?
 	 * 
-	 * @param otherLocations
+	 * @param neighbors
 	 */
 	private void redrawOverlay() {
 		Log.v(TAG, "Redrawing overlay");
-		GeoPoint point;
-		OverlayItem item;
 
 		// Remove all previous overlay items
 		mapOverlay.clear();
 
 		// Draw my overlay item
-		System.out.println("Drawing my location @ " + myLocation.getLatitude()
-				+ " & " + myLocation.getLongitude());
-		point = new GeoPoint(myLocation.getLatitudeE6(),
-				myLocation.getLongitudeE6());
-		item = new OverlayItem(point, "Title", "Snippet");
-		mapOverlay.addOverlayItem(item);
+		mapOverlay.addOverlayItem(me);
 
 		// Draw all other overlay items
-		if (otherLocations == null || otherLocations.isEmpty()) {
-			System.err.println("Given no locations to set.");
+		if (neighbors == null || neighbors.isEmpty()) {
+			Log.e(TAG, "Given no locations to set.");
 		} else {
-			for (SimpleLocation location : otherLocations) {
-				System.out.println("Drawing other location @ "
-						+ location.getLatitude() + " & "
-						+ location.getLongitude());
-				point = new GeoPoint(location.getLatitudeE6(),
-						location.getLongitudeE6());
-				item = new OverlayItem(point, "Title", "Snippet");
-				mapOverlay.addOverlayItem(item);
+			for (User user : neighbors) {
+				Log.v(TAG, "Drawing other user " + user);
+				mapOverlay.addOverlayItem(user);
 			}
 		}
+
+		// Push the updates
 		mapOverlay.populateOverlay();
 		mainActivity.invalidateMapView();
 	}
@@ -158,9 +165,7 @@ public class MainController {
 	 * 
 	 */
 	public void onHailButtonClick() {
-		SimpleLocation lastKnownGeoPoint = getLastKnownLocation();
-		ServerCommunicator communicator = new ServerCommunicator(this);
-		communicator.getNeighbors(lastKnownGeoPoint);
+		communicator.getNeighbors(me);
 	}
 
 	/**
@@ -199,8 +204,8 @@ public class MainController {
 	 * 
 	 * @return the current location
 	 */
-	public SimpleLocation getMyLocation() {
-		return myLocation;
+	public User getMe() {
+		return me;
 	}
 
 	/**
@@ -210,8 +215,8 @@ public class MainController {
 	 * @param myLocation
 	 *            the current location
 	 */
-	public void setMyLocation(SimpleLocation myLocation) {
-		this.myLocation = myLocation;
+	public void setMe(User me) {
+		this.me = me;
 		getActivityHandler().post(runnableRedrawOverlay);
 	}
 }

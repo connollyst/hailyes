@@ -34,8 +34,9 @@ public class AppLocationListener implements LocationListener {
 	 */
 	public void onLocationChanged(Location location) {
 		Log.v(TAG, "The device's location has changed, updating my location..");
-		mainController.setMyLocation(new SimpleLocation(location.getLatitude(),
-				location.getLongitude()));
+		SimpleLocation myLocation = mainController.getMe().getLocation();
+		myLocation.setLatitude(location.getLatitude());
+		myLocation.setLongitude(location.getLongitude());
 	}
 
 	public void onProviderDisabled(String provider) {

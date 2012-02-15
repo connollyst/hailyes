@@ -66,7 +66,7 @@ public class ScheduledUpdater {
 							+ SystemClock.currentThreadTimeMillis());
 			ServerCommunicator communicator = new ServerCommunicator(
 					mainController);
-			communicator.getNeighbors(mainController.getMyLocation());
+			communicator.getNeighbors(mainController.getMe());
 			int next = DELAY;
 			Log.v(TAG, "Queuing another update in " + (next / 1000)
 					+ "s.. current time=" + SystemClock.uptimeMillis());
