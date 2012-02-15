@@ -29,30 +29,26 @@ public class RandomPointDAO implements IDataAccessObject {
 	public List<User> getUsersNearLocation(SimpleLocation location) {
 		List<User> users = new ArrayList<User>();
 		User user;
-		// fake driver #1
-		user = new UserDriver();
-		user.setLocation(new SimpleLocation(location.getLatitude()
-				- randomOffset(), location.getLongitude() - randomOffset()));
-		users.add(user);
-
-		// fake driver #2
-		user = new UserDriver();
-		user.setLocation(new SimpleLocation(location.getLatitude()
-				+ randomOffset(), location.getLongitude() - randomOffset()));
-		users.add(user);
-
-		// fake rider #1
-		user = new UserPassenger();
-		user.setLocation(new SimpleLocation(location.getLatitude()
-				+ randomOffset(), location.getLongitude() + randomOffset()));
-		users.add(user);
-
-		// fake rider #2
-		user = new UserPassenger();
-		user.setLocation(new SimpleLocation(location.getLatitude()
-				- randomOffset(), location.getLongitude() + randomOffset()));
-		users.add(user);
-
+		while (users.size() < 7 || generator.nextBoolean()) {
+			if (generator.nextBoolean()) {
+				user = new UserDriver();
+			} else {
+				user = new UserPassenger();
+			}
+			double latitude, longitude;
+			if (generator.nextBoolean()) {
+				latitude = location.getLatitude() - randomOffset();
+			} else {
+				latitude = location.getLatitude() + randomOffset();
+			}
+			if (generator.nextBoolean()) {
+				longitude = location.getLongitude() - randomOffset();
+			} else {
+				longitude = location.getLongitude() + randomOffset();
+			}
+			user.setLocation(new SimpleLocation(latitude, longitude));
+			users.add(user);
+		}
 		return users;
 	}
 
