@@ -1,12 +1,8 @@
 package com.quane.hail.yes.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.user.BasicUser;
@@ -21,9 +17,7 @@ import com.quane.hail.yes.user.Rider;
 public class HailDAO {
 
 	private static final Random generator = new Random();
-
-	private static Map<UUID, BasicUser> users = Collections
-			.synchronizedMap(new HashMap<UUID, BasicUser>());
+	private UserList userList = new UserList();
 
 	/**
 	 * Returns a list of users near the location in question.
@@ -32,7 +26,7 @@ public class HailDAO {
 	 *            they query location
 	 * @return a list of users near this location
 	 */
-	public static List<BasicUser> getUsersNearLocation(HailLocation location) {
+	public List<BasicUser> getUsersNearLocation(HailLocation location) {
 		List<BasicUser> users = new ArrayList<BasicUser>();
 		BasicUser user;
 		// fake driver #1
@@ -72,11 +66,8 @@ public class HailDAO {
 	 *            the user to be created or updated
 	 * @return a list of users near this user
 	 */
-	public static BasicUser saveUserLocation(BasicUser user) {
-		if (user.getId() == null) {
-			user.setId(UUID.randomUUID());
-		}
-		users.put(user.getId(), user);
+	public BasicUser saveUserLocation(BasicUser user) {
+		userList.add(user);
 		user.setNeighbors(getUsersNearLocation(user.getLocation()));
 		return user;
 	}
@@ -85,8 +76,8 @@ public class HailDAO {
 	 * 
 	 * @param user
 	 */
-	public static void removeUserLocation(BasicUser user) {
-		users.remove(user.getId());
+	public void removeUserLocation(BasicUser user) {
+		userList.remove(user);
 	}
 
 	private static double randomOffset() {

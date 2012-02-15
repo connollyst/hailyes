@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.quane.hail.yes.HailLocation;
 import com.quane.hail.yes.data.HailDAO;
 import com.quane.hail.yes.exception.HailYesException;
@@ -35,7 +36,8 @@ public class HailServiceServlet extends HttpServlet {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private Gson gson = new Gson();
+	private HailDAO dao = new HailDAO();
+	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
 	 * Default constructor.
@@ -61,7 +63,7 @@ public class HailServiceServlet extends HttpServlet {
 		try {
 			logger.info("Getting location");
 			HailLocation location = getLocationFromRequest(request);
-			List<BasicUser> users = HailDAO.getUsersNearLocation(location);
+			List<BasicUser> users = dao.getUsersNearLocation(location);
 			String jsonUsers = gson.toJson(users);
 			writeResponse(response, jsonUsers);
 		} catch (HailYesException hye) {
@@ -80,7 +82,7 @@ public class HailServiceServlet extends HttpServlet {
 		logger.info("doPut called");
 		try {
 			BasicUser user = getUserFromRequest(request);
-			user = HailDAO.saveUserLocation(user);
+			user = dao.saveUserLocation(user);
 			String jsonUser = gson.toJson(user, BasicUser.class);
 			writeResponse(response, jsonUser);
 		} catch (HailYesException hye) {
@@ -99,7 +101,7 @@ public class HailServiceServlet extends HttpServlet {
 		logger.info("doDelete called");
 		try {
 			BasicUser user = getUserFromRequest(request);
-			HailDAO.removeUserLocation(user);
+			dao.removeUserLocation(user);
 			// no response necessary
 		} catch (HailYesException hye) {
 			throw new ServletException(hye);
