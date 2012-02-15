@@ -55,25 +55,26 @@ public class ServerCommunicator {
 	}
 
 	/**
+	 * Fetch the list of neighbors from the server within range of the current
+	 * user.
+	 * 
+	 * @param me
+	 *            the current user
+	 */
+	public void getNeighbors(final User me) {
+		Log.v(TAG, "Fetching a list of folks around me.");
+		sendMessage(ACTION.GET, me);
+	}
+
+	/**
 	 * Let the server know that the current user is now looking for a cab.
 	 * 
 	 * @param me
 	 *            the current user
 	 */
 	public void registerMyself(final User me) {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					String response = sendMessage(ACTION.PUT, me);
-					if (response != null) {
-						User[] users = gson.fromJson(response, User[].class);
-						mainController.redrawOverlay(Arrays.asList(users));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		Log.v(TAG, "Registering myself as searching.");
+		sendMessage(ACTION.PUT, me);
 	}
 
 	/**
@@ -84,42 +85,8 @@ public class ServerCommunicator {
 	 *            the current user
 	 */
 	public void unregisterMyself(final User me) {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					String response = sendMessage(ACTION.DELETE, me);
-					if (response != null) {
-						User[] users = gson.fromJson(response, User[].class);
-						mainController.redrawOverlay(Arrays.asList(users));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-
-	/**
-	 * Fetch the list of neighbors from the server within range of the current
-	 * user.
-	 * 
-	 * @param me
-	 *            the current user
-	 */
-	public void getNeighbors(final User me) {
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					String response = sendMessage(ACTION.GET, me);
-					if (response != null) {
-						User[] users = gson.fromJson(response, User[].class);
-						mainController.redrawOverlay(Arrays.asList(users));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		Log.v(TAG, "Unregistering myself as searching.");
+		sendMessage(ACTION.DELETE, me);
 	}
 
 	/**
@@ -132,51 +99,60 @@ public class ServerCommunicator {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	private String sendMessage(ACTION action, User me)
-			throws URISyntaxException, ClientProtocolException, IOException,
-			Exception {
-		// Prepare the parameters
-		List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-		queryParams.add(new BasicNameValuePair("user", gson.toJson(me,
-				User.class)));
-		queryParams
-				.add(new BasicNameValuePair(
-						StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
-						StandardsResource.QUERY_PARAMETER_VALUES.COORDINATES_ARE_E6_FALSE));
-		URI uri = getURI(queryParams);
-		// Prepare the request
-		HttpRequestBase request = null;
-		switch (action) {
-		case GET:
-			request = new HttpGet(uri);
-			break;
-		case PUT:
-			request = new HttpPut(uri);
-			break;
-		case DELETE:
-			request = new HttpDelete(uri);
-			break;
-		default:
-			throw new Exception("The method '" + action + "' is not supported!");
-		}
-		// Execute the request and return the response
-		try {
-			Log.v(TAG, "Calling url: " + request.getURI());
-			String response = httpClient.execute(request,
-					new BasicResponseHandler());
-			Log.v(TAG, "Response=" + response);
-			return response;
-		} catch (HttpResponseException re) {
-			switch (re.getStatusCode()) {
-			case 500:
-				throw new Exception(re.getStatusCode() + ": "
-						+ "The server couldn't interpret the request!", re);
-			default:
-				throw new Exception(re.getStatusCode() + ": "
-						+ re.getLocalizedMessage(), re);
-			}
+	private void sendMessage(final ACTION action, final User me) {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					// Prepare the parameters
+					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+					queryParams.add(new BasicNameValuePair("user", gson.toJson(
+							me, User.class)));
+					queryParams
+							.add(new BasicNameValuePair(
+									StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
+									StandardsResource.QUERY_PARAMETER_VALUES.COORDINATES_ARE_E6_FALSE));
+					URI uri = getURI(queryParams);
+					// Prepare the request
+					HttpRequestBase request = null;
+					switch (action) {
+					case GET:
+						request = new HttpGet(uri);
+						break;
+					case PUT:
+						request = new HttpPut(uri);
+						break;
+					case DELETE:
+						request = new HttpDelete(uri);
+						break;
+					default:
+						throw new Exception("The method '" + action
+								+ "' is not supported!");
+					}
+					// Execute the request and return the response
+					try {
+						Log.v(TAG, "Calling url: " + request.getURI());
+						String response = httpClient.execute(request,
+								new BasicResponseHandler());
+						Log.v(TAG, "Response=" + response);
+						User[] users = gson.fromJson(response, User[].class);
+						mainController.redrawOverlay(Arrays.asList(users));
+					} catch (HttpResponseException re) {
+						switch (re.getStatusCode()) {
+						case 500:
+							throw new Exception(re.getStatusCode()
+									+ ": The server couldn't interpret"
+									+ " the request!", re);
+						default:
+							throw new Exception(re.getStatusCode() + ": "
+									+ re.getLocalizedMessage(), re);
+						}
 
-		}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	/**
