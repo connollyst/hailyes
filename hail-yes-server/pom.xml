@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.quane.hail.yes</groupId>
 	<artifactId>hail-yes-server</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>hail-yes-server</name>
 	<description>The server component of 'Hail Yes'.</description>
@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>com.quane.hail.yes</groupId>
 			<artifactId>hail-yes-core</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>

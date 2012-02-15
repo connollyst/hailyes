@@ -2,15 +2,15 @@ package com.quane.hail.yes.data;
 
 import java.util.List;
 
-import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.user.BasicUser;
+import com.quane.hail.yes.SimpleLocation;
+import com.quane.hail.yes.user.User;
 
 public interface IDataAccessObject {
 
-	public List<BasicUser> getUsersNearLocation(HailLocation location);
+	public List<User> getUsersNearLocation(SimpleLocation location);
 
-	public BasicUser saveUserLocation(BasicUser user);
+	public User saveUserLocation(User user);
 
-	public void removeUserLocation(BasicUser user);
-	
+	public void removeUserLocation(User user);
+
 }

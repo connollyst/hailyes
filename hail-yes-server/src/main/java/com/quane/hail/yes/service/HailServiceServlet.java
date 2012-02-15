@@ -14,13 +14,13 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.data.RandomPointDAO;
+import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.data.IDataAccessObject;
+import com.quane.hail.yes.data.RandomPointDAO;
 import com.quane.hail.yes.exception.HailYesException;
 import com.quane.hail.yes.exception.MissingLocationException;
 import com.quane.hail.yes.exception.MissingUserException;
-import com.quane.hail.yes.user.BasicUser;
+import com.quane.hail.yes.user.User;
 
 /**
  * The single access point for clients to communicate with the server.<br/>
@@ -63,8 +63,8 @@ public class HailServiceServlet extends HttpServlet {
 		logger.info("doGet called");
 		try {
 			logger.info("Getting location");
-			HailLocation location = getLocationFromRequest(request);
-			List<BasicUser> users = dao.getUsersNearLocation(location);
+			SimpleLocation location = getLocationFromRequest(request);
+			List<User> users = dao.getUsersNearLocation(location);
 			String jsonUsers = gson.toJson(users);
 			writeResponse(response, jsonUsers);
 		} catch (HailYesException hye) {
@@ -82,9 +82,9 @@ public class HailServiceServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doPut called");
 		try {
-			BasicUser user = getUserFromRequest(request);
+			User user = getUserFromRequest(request);
 			user = dao.saveUserLocation(user);
-			String jsonUser = gson.toJson(user, BasicUser.class);
+			String jsonUser = gson.toJson(user, User.class);
 			writeResponse(response, jsonUser);
 		} catch (HailYesException hye) {
 			throw new ServletException(hye);
@@ -101,7 +101,7 @@ public class HailServiceServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("doDelete called");
 		try {
-			BasicUser user = getUserFromRequest(request);
+			User user = getUserFromRequest(request);
 			dao.removeUserLocation(user);
 			// no response necessary
 		} catch (HailYesException hye) {
@@ -116,7 +116,7 @@ public class HailServiceServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private BasicUser getUserFromRequest(HttpServletRequest request)
+	private User getUserFromRequest(HttpServletRequest request)
 			throws MissingUserException {
 		String jsonLocation = request.getParameter(REQUEST_PARAMETER_USER);
 		if (jsonLocation == null) {
@@ -125,7 +125,7 @@ public class HailServiceServlet extends HttpServlet {
 							+ REQUEST_PARAMETER_USER + "'!");
 		}
 		logger.info("request.user: " + jsonLocation);
-		return gson.fromJson(jsonLocation, BasicUser.class);
+		return gson.fromJson(jsonLocation, User.class);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class HailServiceServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private HailLocation getLocationFromRequest(HttpServletRequest request)
+	private SimpleLocation getLocationFromRequest(HttpServletRequest request)
 			throws MissingLocationException {
 		String jsonLocation = request.getParameter(REQUEST_PARAMETER_LOCATION);
 		if (jsonLocation == null) {
@@ -143,7 +143,7 @@ public class HailServiceServlet extends HttpServlet {
 							+ REQUEST_PARAMETER_LOCATION + "'!");
 		}
 		logger.info("request.location: " + jsonLocation);
-		return gson.fromJson(jsonLocation, HailLocation.class);
+		return gson.fromJson(jsonLocation, SimpleLocation.class);
 	}
 
 	/**

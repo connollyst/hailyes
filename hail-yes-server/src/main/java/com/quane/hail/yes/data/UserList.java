@@ -5,25 +5,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.quane.hail.yes.user.BasicUser;
+import com.quane.hail.yes.user.User;
 
 public class UserList {
 
-	private static Map<UUID, BasicUser> users = Collections
-			.synchronizedMap(new HashMap<UUID, BasicUser>());
+	private static Map<UUID, User> users = Collections
+			.synchronizedMap(new HashMap<UUID, User>());
 
 	public UserList() {
 
 	}
 
-	public void add(BasicUser user) {
+	public void add(User user) {
 		if (user.getId() == null) {
 			user.setId(UUID.randomUUID());
 		}
 		users.put(user.getId(), user);
 	}
 
-	public void remove(BasicUser user) {
+	public void remove(User user) {
 		users.remove(user.getId());
 	}
 

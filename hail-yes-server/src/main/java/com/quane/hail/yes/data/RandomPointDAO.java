@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.quane.hail.yes.HailLocation;
-import com.quane.hail.yes.user.BasicUser;
-import com.quane.hail.yes.user.Driver;
-import com.quane.hail.yes.user.Rider;
+import com.quane.hail.yes.SimpleLocation;
+import com.quane.hail.yes.user.User;
+import com.quane.hail.yes.user.UserDriver;
+import com.quane.hail.yes.user.UserPassenger;
 
 /**
  * Data access object.
@@ -26,30 +26,30 @@ public class RandomPointDAO implements IDataAccessObject {
 	 *            they query location
 	 * @return a list of users near this location
 	 */
-	public List<BasicUser> getUsersNearLocation(HailLocation location) {
-		List<BasicUser> users = new ArrayList<BasicUser>();
-		BasicUser user;
+	public List<User> getUsersNearLocation(SimpleLocation location) {
+		List<User> users = new ArrayList<User>();
+		User user;
 		// fake driver #1
-		user = new Driver();
-		user.setLocation(new HailLocation(location.getLatitude()
+		user = new UserDriver();
+		user.setLocation(new SimpleLocation(location.getLatitude()
 				- randomOffset(), location.getLongitude() - randomOffset()));
 		users.add(user);
 
 		// fake driver #2
-		user = new Driver();
-		user.setLocation(new HailLocation(location.getLatitude()
+		user = new UserDriver();
+		user.setLocation(new SimpleLocation(location.getLatitude()
 				+ randomOffset(), location.getLongitude() - randomOffset()));
 		users.add(user);
 
 		// fake rider #1
-		user = new Rider();
-		user.setLocation(new HailLocation(location.getLatitude()
+		user = new UserPassenger();
+		user.setLocation(new SimpleLocation(location.getLatitude()
 				+ randomOffset(), location.getLongitude() + randomOffset()));
 		users.add(user);
 
 		// fake rider #2
-		user = new Rider();
-		user.setLocation(new HailLocation(location.getLatitude()
+		user = new UserPassenger();
+		user.setLocation(new SimpleLocation(location.getLatitude()
 				- randomOffset(), location.getLongitude() + randomOffset()));
 		users.add(user);
 
@@ -66,7 +66,7 @@ public class RandomPointDAO implements IDataAccessObject {
 	 *            the user to be created or updated
 	 * @return a list of users near this user
 	 */
-	public BasicUser saveUserLocation(BasicUser user) {
+	public User saveUserLocation(User user) {
 		userList.add(user);
 		user.setNeighbors(getUsersNearLocation(user.getLocation()));
 		return user;
@@ -76,7 +76,7 @@ public class RandomPointDAO implements IDataAccessObject {
 	 * 
 	 * @param user
 	 */
-	public void removeUserLocation(BasicUser user) {
+	public void removeUserLocation(User user) {
 		userList.remove(user);
 	}
 
