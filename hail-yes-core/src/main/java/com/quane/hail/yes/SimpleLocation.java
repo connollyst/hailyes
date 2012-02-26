@@ -1,5 +1,7 @@
 package com.quane.hail.yes;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * A simple location object that stores latitude and longitude coordinates.
  * 
@@ -40,18 +42,22 @@ public class SimpleLocation {
 		this.longitude = longitude;
 	}
 
+	@JsonIgnore
 	public int getLatitudeE6() {
 		return (int) (latitude * 1E6);
 	}
 
+	@JsonIgnore
 	public void setLatitudeE6(int latitudeE6) {
 		this.latitude = (latitudeE6 / 1E6);
 	}
 
+	@JsonIgnore
 	public int getLongitudeE6() {
 		return (int) (longitude * 1E6);
 	}
 
+	@JsonIgnore
 	public void setLongitudeE6(int longitudeE6) {
 		this.longitude = (longitudeE6 / 1E6);
 	}

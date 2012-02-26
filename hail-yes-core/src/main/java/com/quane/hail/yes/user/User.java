@@ -3,6 +3,7 @@ package com.quane.hail.yes.user;
 import java.util.List;
 import java.util.UUID;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.quane.hail.yes.SimpleLocation;
@@ -48,10 +49,12 @@ public class User {
 		this.type = type;
 	}
 
+	@JsonIgnore
 	public boolean getIsMe() {
 		return isMe;
 	}
 
+	@JsonIgnore
 	public void setIsMe(boolean isMe) {
 		this.isMe = isMe;
 	}
@@ -72,18 +75,22 @@ public class User {
 		this.location = location;
 	}
 
+	@JsonIgnore
 	public List<User> getNeighbors() {
 		return neighbors;
 	}
 
+	@JsonIgnore
 	public void setNeighbors(List<User> neighbors) {
 		this.neighbors = neighbors;
 	}
 
+	@JsonIgnore
 	public boolean isDriver() {
 		return type.equals(UserType.DRIVER);
 	}
 
+	@JsonIgnore
 	public boolean isPassenger() {
 		return type.equals(UserType.PASSENGER);
 	}
