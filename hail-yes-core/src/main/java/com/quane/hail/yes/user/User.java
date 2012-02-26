@@ -3,8 +3,11 @@ package com.quane.hail.yes.user;
 import java.util.List;
 import java.util.UUID;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.quane.hail.yes.SimpleLocation;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	public enum UserType {
@@ -45,7 +48,7 @@ public class User {
 		this.type = type;
 	}
 
-	public boolean isMe() {
+	public boolean getIsMe() {
 		return isMe;
 	}
 
@@ -53,7 +56,7 @@ public class User {
 		this.isMe = isMe;
 	}
 
-	public boolean isSearching() {
+	public boolean getIsSearching() {
 		return isSearching;
 	}
 

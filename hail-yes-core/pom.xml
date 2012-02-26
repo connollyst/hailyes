@@ -14,5 +14,11 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+			<version>1.9.4</version>
+		</dependency>
 	</dependencies>
 </project>
