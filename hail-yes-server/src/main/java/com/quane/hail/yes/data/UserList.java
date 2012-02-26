@@ -1,7 +1,9 @@
 package com.quane.hail.yes.data;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,5 +31,9 @@ public class UserList {
 
 	public int size() {
 		return users.size();
+	}
+
+	public List<User> getList() {
+		return new ArrayList<User>(users.values());
 	}
 }

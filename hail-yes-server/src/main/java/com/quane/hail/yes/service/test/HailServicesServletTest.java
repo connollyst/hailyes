@@ -21,9 +21,8 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.quane.hail.yes.SimpleLocation;
 import com.quane.hail.yes.user.User;
 import com.quane.hail.yes.user.UserDriver;
@@ -41,8 +40,7 @@ public class HailServicesServletTest extends HttpServlet {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private HttpClient client = new DefaultHttpClient();
-	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -79,11 +77,12 @@ public class HailServicesServletTest extends HttpServlet {
 	 */
 	private void testAddNewRider(Writer writer) throws Exception {
 		writer.write("=== Testing: add a new rider\n");
+		HttpClient client = new DefaultHttpClient();
 		SimpleLocation homeLocation = new SimpleLocation(HOME_LATITUDE,
 				HOME_LONGITUDE);
 		User requestUser = new UserDriver();
 		requestUser.setLocation(homeLocation);
-		String jsonRider = gson.toJson(requestUser, User.class);
+		String jsonRider = mapper.writeValueAsString(requestUser);
 		writer.write("=== request: " + jsonRider + "\n");
 		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 		qparams.add(new BasicNameValuePair("user", jsonRider));
@@ -95,7 +94,7 @@ public class HailServicesServletTest extends HttpServlet {
 		writer.write("=== response: " + response + "\n");
 		User responseUser = null;
 		try {
-			responseUser = gson.fromJson(response, User.class);
+			responseUser = mapper.readValue(response, User.class);
 		} catch (Exception e) {
 			writer.write("=== parsing error: " + e.getMessage() + "\n");
 		}
