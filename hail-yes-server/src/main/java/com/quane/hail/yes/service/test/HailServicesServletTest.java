@@ -36,8 +36,8 @@ public class HailServicesServletTest extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final double HOME_LATITUDE = -122.423723;
-	private static final double HOME_LONGITUDE = 37.758103;
+	private static final double HOME_LATITUDE = 37.758103;
+	private static final double HOME_LONGITUDE = -122.423723;
 
 	private Logger logger = Logger.getLogger(getClass());
 
