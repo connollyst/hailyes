@@ -13,4 +13,5 @@ public interface IDataAccessObject {
 
 	public void removeUserLocation(User user);
 
+	public void close();
 }

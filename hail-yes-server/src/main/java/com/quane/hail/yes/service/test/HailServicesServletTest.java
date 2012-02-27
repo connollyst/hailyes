@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -92,13 +93,13 @@ public class HailServicesServletTest extends HttpServlet {
 		HttpPut put = new HttpPut(uri);
 		String response = client.execute(put, new BasicResponseHandler());
 		writer.write("=== response: " + response + "\n");
-		User responseUser = null;
+		User[] responseUser = null;
 		try {
-			responseUser = mapper.readValue(response, User.class);
+			responseUser = mapper.readValue(response, User[].class);
 		} catch (Exception e) {
 			writer.write("=== parsing error: " + e.getMessage() + "\n");
 		}
-		writer.write("=== parsed response: " + responseUser + "\n");
-
+		writer.write("=== parsed response: " + Arrays.toString(responseUser)
+				+ "\n");
 	}
 }

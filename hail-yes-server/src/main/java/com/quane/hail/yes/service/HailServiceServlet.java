@@ -50,6 +50,12 @@ public class HailServiceServlet extends HttpServlet {
 		super();
 	}
 
+	@Override
+	public void destroy() {
+		super.destroy();
+		dao.close();
+	}
+
 	/**
 	 * Handles GET requests to this service.<br/>
 	 * GET requests mean 'tell me whats going on around me'. As such, we require
@@ -90,6 +96,8 @@ public class HailServiceServlet extends HttpServlet {
 			writeResponse(response, users);
 		} catch (HailYesException hye) {
 			throw new ServletException(hye);
+		} catch (Exception e) {
+			throw new ServletException(e.getMessage());
 		}
 		logger.info("doPut done");
 	}

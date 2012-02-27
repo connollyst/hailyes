@@ -19,6 +19,10 @@ public class RandomPointDAO implements IDataAccessObject {
 	private static final Random generator = new Random();
 	private UserList userList = new UserList();
 
+	public void close() {
+		// do nothing
+	}
+
 	/**
 	 * Returns a list of users near the location in question.
 	 * 
