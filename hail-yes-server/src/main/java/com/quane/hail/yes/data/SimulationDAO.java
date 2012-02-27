@@ -38,9 +38,9 @@ public class SimulationDAO implements IDataAccessObject {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private static final SynchronizedUserMap userMap = new SynchronizedUserMap();
-
-	private static final Map<UUID, DIRECTION> userDirectionMap = new HashMap<UUID, DIRECTION>();
+	private SynchronizedUserMap userMap = new SynchronizedUserMap();
+	private Map<UUID, DIRECTION> userDirectionMap = new HashMap<UUID, DIRECTION>();
+	private long lastQuery = System.currentTimeMillis();
 
 	/**
 	 * Default constructor.<br/>
@@ -69,7 +69,12 @@ public class SimulationDAO implements IDataAccessObject {
 		logger.info("Starting up simulation.");
 		scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() {
-				updateSimulatedUsers();
+				// If folks are still asking for updates, continue the
+				// simulation
+				long current = System.currentTimeMillis();
+				if (current - lastQuery > 1000 * 60) {
+					updateSimulatedUsers();
+				}
 			}
 		}, 1, 5, TimeUnit.SECONDS);
 	}
@@ -82,6 +87,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * @return a list of users near this location
 	 */
 	public List<User> getUsersNearLocation(SimpleLocation location) {
+		lastQuery = System.currentTimeMillis();
 		return userMap.getList();
 	}
 
