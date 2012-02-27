@@ -9,14 +9,14 @@ import java.util.UUID;
 
 import com.quane.hail.yes.user.User;
 
-public class UserList {
+/**
+ * 
+ * @author Sean Connolly
+ */
+public class SynchronizedUserMap {
 
-	private static Map<UUID, User> users = Collections
+	private static final Map<UUID, User> users = Collections
 			.synchronizedMap(new HashMap<UUID, User>());
-
-	public UserList() {
-
-	}
 
 	public void add(User user) {
 		if (user.getId() == null) {
@@ -36,4 +36,5 @@ public class UserList {
 	public List<User> getList() {
 		return new ArrayList<User>(users.values());
 	}
+
 }

@@ -1,10 +1,13 @@
 package com.quane.hail.yes.data;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -24,14 +27,20 @@ import com.quane.hail.yes.user.UserPassenger;
  */
 public class SimulationDAO implements IDataAccessObject {
 
-	private static final Random generator = new Random();
+	private static final Random RANDOMIZER = new Random();
 
-	private Logger logger = Logger.getLogger(getClass());
-
-	private UserList userList = new UserList();
+	private static enum DIRECTION {
+		NORTH, SOUTH, EAST, WEST
+	};
 
 	private final ScheduledExecutorService scheduler = Executors
 			.newScheduledThreadPool(1);
+
+	private Logger logger = Logger.getLogger(getClass());
+
+	private static final SynchronizedUserMap userList = new SynchronizedUserMap();
+
+	private static final Map<UUID, DIRECTION> userDirectionList = new HashMap<UUID, DIRECTION>();
 
 	/**
 	 * Default constructor.<br/>
@@ -47,6 +56,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * This cannot be undone.
 	 */
 	public void close() {
+		logger.info("Shutting down simulation.");
 		scheduler.shutdownNow();
 	}
 
@@ -56,11 +66,12 @@ public class SimulationDAO implements IDataAccessObject {
 	 * users.
 	 */
 	public void startUpdatingSimulatedUsers() {
+		logger.info("Starting up simulation.");
 		scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				updateSimulatedUsers();
 			}
-		}, 10, 10, TimeUnit.SECONDS);
+		}, 1, 5, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -96,7 +107,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * @param user
 	 */
 	public void removeUserLocation(User user) {
-		userList.remove(user);
+		// userList.remove(user);
 	}
 
 	/**
@@ -105,19 +116,19 @@ public class SimulationDAO implements IDataAccessObject {
 	 */
 	private void spawnNewSimulatedUsers(SimpleLocation location) {
 		User user;
-		while (userList.size() < 7 || generator.nextBoolean()) {
-			if (generator.nextBoolean()) {
+		while (userList.size() < 7 || RANDOMIZER.nextBoolean()) {
+			if (RANDOMIZER.nextBoolean()) {
 				user = new UserDriver();
 			} else {
 				user = new UserPassenger();
 			}
 			double latitude, longitude;
-			if (generator.nextBoolean()) {
+			if (RANDOMIZER.nextBoolean()) {
 				latitude = location.getLatitude() - randomOffset();
 			} else {
 				latitude = location.getLatitude() + randomOffset();
 			}
-			if (generator.nextBoolean()) {
+			if (RANDOMIZER.nextBoolean()) {
 				longitude = location.getLongitude() - randomOffset();
 			} else {
 				longitude = location.getLongitude() + randomOffset();
@@ -128,15 +139,65 @@ public class SimulationDAO implements IDataAccessObject {
 	}
 
 	private static double randomOffset() {
-		return generator.nextDouble() * 0.01;
+		return RANDOMIZER.nextDouble() * 0.01;
 	}
 
 	/**
 	 * 
 	 */
 	private void updateSimulatedUsers() {
-		logger.info("Running updateSimulatedUsers");
-
+		logger.info("Updating simulated user locations (" + userList.size()
+				+ " users)..");
+		try {
+			double defaultDistance = 0.000001;
+			List<DIRECTION> directions = Arrays.asList(DIRECTION.values());
+			for (User user : userList.getList()) {
+				logger.info("BEFORE: " + user);
+				// Get this user's current direction or pick a random one if
+				// there
+				// is none
+				DIRECTION direction = userDirectionList.get(user.getId());
+				if (direction == null) {
+					direction = directions.get(RANDOMIZER.nextInt(directions
+							.size()));
+				}
+				// Give a 1 in 20 chance of trying to change directions
+				if (RANDOMIZER.nextInt(20) == 1) {
+					direction = directions.get(RANDOMIZER.nextInt(directions
+							.size()));
+				}
+				// Store the new user direction
+				userDirectionList.put(user.getId(), direction);
+				// Now we can go ahead and update the user's location according
+				// to which direction they are now going
+				double dx = 0.0;
+				double dy = 0.0;
+				switch (direction) {
+				case NORTH:
+					dx = 0.0;
+					dy = defaultDistance;
+					break;
+				case SOUTH:
+					dx = 0.0;
+					dy = -defaultDistance;
+					break;
+				case EAST:
+					dx = -defaultDistance;
+					dy = 0.0;
+					break;
+				case WEST:
+					dx = defaultDistance;
+					dy = 0.0;
+					break;
+				}
+				SimpleLocation userLocation = user.getLocation();
+				userLocation.setLatitude(userLocation.getLatitude() + dx);
+				userLocation.setLongitude(userLocation.getLongitude() + dy);
+				logger.info("AFTER:  " + user);
+			}
+		} catch (Throwable t) {
+			logger.error("An error occurred while running the simulating.", t);
+		}
 	}
 
 }

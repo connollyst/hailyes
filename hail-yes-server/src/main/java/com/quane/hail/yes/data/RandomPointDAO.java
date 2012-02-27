@@ -17,7 +17,7 @@ import com.quane.hail.yes.user.UserPassenger;
 public class RandomPointDAO implements IDataAccessObject {
 
 	private static final Random generator = new Random();
-	private UserList userList = new UserList();
+	private SynchronizedUserMap userList = new SynchronizedUserMap();
 
 	public void close() {
 		// do nothing
