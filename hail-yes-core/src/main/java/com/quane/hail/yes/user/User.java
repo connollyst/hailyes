@@ -122,8 +122,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return type + " [id=" + id + ", location=" + location + ", neighbors="
-				+ neighbors + "]";
+		return type + " [id=" + id + ", location=" + location + "]";
 	}
 
 }

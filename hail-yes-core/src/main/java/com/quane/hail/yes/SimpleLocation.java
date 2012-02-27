@@ -94,7 +94,7 @@ public class SimpleLocation {
 
 	@Override
 	public String toString() {
-		return "HailLocation [latitude=" + latitude + ", longitude="
+		return "SimpleLocation [latitude=" + latitude + ", longitude="
 				+ longitude + "]";
 	}
 
