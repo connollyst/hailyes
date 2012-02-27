@@ -1,5 +1,8 @@
 package com.quane.hail.yes;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -9,19 +12,28 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class SimpleLocation {
 
-	private double latitude;
-	private double longitude;
+	// We only care to store coordinates out to 6 significant digits
+	private final DecimalFormat preciseLocationFormatter = new DecimalFormat(
+			"#.######");
+	// We can round coordinates down to 2 for rough coordinate calculations
+	private final DecimalFormat roughLocationFormatter = new DecimalFormat(
+			"#.##");
+
+	private double latitude = 0.0;
+	private double longitude = 0.0;
 
 	public SimpleLocation() {
-
+		roughLocationFormatter.setRoundingMode(RoundingMode.HALF_UP);
 	}
 
 	public SimpleLocation(double latitude, double longitude) {
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this();
+		setLatitude(latitude);
+		setLongitude(longitude);
 	}
 
 	public SimpleLocation(int latitudeE6, int longitudeE6) {
+		this();
 		setLatitudeE6(latitudeE6);
 		setLongitudeE6(longitudeE6);
 	}
@@ -31,7 +43,7 @@ public class SimpleLocation {
 	}
 
 	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+		this.latitude = Long.valueOf(preciseLocationFormatter.format(latitude));
 	}
 
 	public double getLongitude() {
@@ -39,24 +51,69 @@ public class SimpleLocation {
 	}
 
 	public void setLongitude(double longitude) {
-		this.longitude = longitude;
+		this.longitude = Long.valueOf(preciseLocationFormatter
+				.format(longitude));
 	}
 
+	/**
+	 * Rounds down the latitude to a more rough latitude. This number, combined
+	 * with the rough longitude, can be used to tell if two users are in the
+	 * same location, roughly.
+	 * 
+	 * @return a rounded down latitude
+	 */
+	@JsonIgnore
+	public double getRoughLatitude() {
+		return Double.valueOf(roughLocationFormatter.format(latitude));
+	}
+
+	/**
+	 * Rounds down the longitude to a more rough longitude. This number,
+	 * combined with the rough latitude, can be used to tell if two users are in
+	 * the same location, roughly.
+	 * 
+	 * @return a rounded down longitude
+	 */
+	@JsonIgnore
+	public double getRoughLongitude() {
+		return Double.valueOf(roughLocationFormatter.format(longitude));
+	}
+
+	/**
+	 * Gets the latitude in the 'E6' format.
+	 * 
+	 * @return
+	 */
 	@JsonIgnore
 	public int getLatitudeE6() {
 		return (int) (latitude * 1E6);
 	}
 
+	/**
+	 * Sets the latitude using the 'E6' format.
+	 * 
+	 * @param latitudeE6
+	 */
 	@JsonIgnore
 	public void setLatitudeE6(int latitudeE6) {
 		this.latitude = (latitudeE6 / 1E6);
 	}
 
+	/**
+	 * Gets the longitude in the 'E6' format.
+	 * 
+	 * @return
+	 */
 	@JsonIgnore
 	public int getLongitudeE6() {
 		return (int) (longitude * 1E6);
 	}
 
+	/**
+	 * Sets the longitude using the 'E6' format.
+	 * 
+	 * @param longitudeE6
+	 */
 	@JsonIgnore
 	public void setLongitudeE6(int longitudeE6) {
 		this.longitude = (longitudeE6 / 1E6);
