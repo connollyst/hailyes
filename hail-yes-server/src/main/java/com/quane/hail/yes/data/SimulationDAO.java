@@ -72,7 +72,7 @@ public class SimulationDAO implements IDataAccessObject {
 				// If folks are still asking for updates, continue the
 				// simulation
 				long current = System.currentTimeMillis();
-				if (current - lastQuery > 1000 * 60) {
+				if (current - lastQuery < 1000 * 60) {
 					updateSimulatedUsers();
 				}
 			}
@@ -113,7 +113,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * @param user
 	 */
 	public void removeUserLocation(User user) {
-		// userList.remove(user);
+		userMap.remove(user);
 	}
 
 	/**
