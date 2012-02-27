@@ -38,9 +38,9 @@ public class SimulationDAO implements IDataAccessObject {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private static final SynchronizedUserMap userList = new SynchronizedUserMap();
+	private static final SynchronizedUserMap userMap = new SynchronizedUserMap();
 
-	private static final Map<UUID, DIRECTION> userDirectionList = new HashMap<UUID, DIRECTION>();
+	private static final Map<UUID, DIRECTION> userDirectionMap = new HashMap<UUID, DIRECTION>();
 
 	/**
 	 * Default constructor.<br/>
@@ -82,7 +82,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * @return a list of users near this location
 	 */
 	public List<User> getUsersNearLocation(SimpleLocation location) {
-		return userList.getList();
+		return userMap.getList();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 * @return a list of users near this user
 	 */
 	public User saveUserLocation(User user) {
-		userList.add(user);
+		userMap.add(user);
 		spawnNewSimulatedUsers(user.getLocation());
 		user.setNeighbors(getUsersNearLocation(user.getLocation()));
 		return user;
@@ -116,7 +116,7 @@ public class SimulationDAO implements IDataAccessObject {
 	 */
 	private void spawnNewSimulatedUsers(SimpleLocation location) {
 		User user;
-		while (userList.size() < 7 || RANDOMIZER.nextBoolean()) {
+		while (userMap.size() < 7 || RANDOMIZER.nextBoolean()) {
 			if (RANDOMIZER.nextBoolean()) {
 				user = new UserDriver();
 			} else {
@@ -134,7 +134,7 @@ public class SimulationDAO implements IDataAccessObject {
 				longitude = location.getLongitude() + randomOffset();
 			}
 			user.setLocation(new SimpleLocation(latitude, longitude));
-			userList.add(user);
+			userMap.add(user);
 		}
 	}
 
@@ -146,17 +146,17 @@ public class SimulationDAO implements IDataAccessObject {
 	 * 
 	 */
 	private void updateSimulatedUsers() {
-		logger.info("Updating simulated user locations (" + userList.size()
+		logger.info("Updating simulated user locations (" + userMap.size()
 				+ " users)..");
 		try {
 			double defaultDistance = 0.000001;
 			List<DIRECTION> directions = Arrays.asList(DIRECTION.values());
-			for (User user : userList.getList()) {
+			for (User user : userMap.getList()) {
 				logger.info("BEFORE: " + user);
 				// Get this user's current direction or pick a random one if
 				// there
 				// is none
-				DIRECTION direction = userDirectionList.get(user.getId());
+				DIRECTION direction = userDirectionMap.get(user.getId());
 				if (direction == null) {
 					direction = directions.get(RANDOMIZER.nextInt(directions
 							.size()));
@@ -167,7 +167,7 @@ public class SimulationDAO implements IDataAccessObject {
 							.size()));
 				}
 				// Store the new user direction
-				userDirectionList.put(user.getId(), direction);
+				userDirectionMap.put(user.getId(), direction);
 				// Now we can go ahead and update the user's location according
 				// to which direction they are now going
 				double dx = 0.0;

@@ -17,7 +17,7 @@ import com.quane.hail.yes.user.UserPassenger;
 public class RandomPointDAO implements IDataAccessObject {
 
 	private static final Random generator = new Random();
-	private SynchronizedUserMap userList = new SynchronizedUserMap();
+	private SynchronizedUserMap userMap = new SynchronizedUserMap();
 
 	public void close() {
 		// do nothing
@@ -67,7 +67,7 @@ public class RandomPointDAO implements IDataAccessObject {
 	 * @return a list of users near this user
 	 */
 	public User saveUserLocation(User user) {
-		userList.add(user);
+		userMap.add(user);
 		user.setNeighbors(getUsersNearLocation(user.getLocation()));
 		return user;
 	}
@@ -77,7 +77,7 @@ public class RandomPointDAO implements IDataAccessObject {
 	 * @param user
 	 */
 	public void removeUserLocation(User user) {
-		userList.remove(user);
+		userMap.remove(user);
 	}
 
 	private static double randomOffset() {
