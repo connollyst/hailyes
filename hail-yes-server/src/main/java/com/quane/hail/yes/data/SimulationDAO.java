@@ -149,7 +149,7 @@ public class SimulationDAO implements IDataAccessObject {
 		logger.info("Updating simulated user locations (" + userMap.size()
 				+ " users)..");
 		try {
-			double defaultDistance = 0.000001;
+			double defaultDistance = 0.0001;
 			List<DIRECTION> directions = Arrays.asList(DIRECTION.values());
 			for (User user : userMap.getList()) {
 				logger.info("BEFORE: " + user);
