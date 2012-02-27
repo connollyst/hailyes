@@ -81,6 +81,18 @@ public class MainActivity extends MapActivity {
 		}
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mainController.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mainController.onResume();
+	}
+
 	/**
 	 * 
 	 * @return

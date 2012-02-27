@@ -6,6 +6,11 @@ import android.util.Log;
 
 import com.quane.hail.yes.android.app.ui.MainController;
 
+/**
+ * A class for updating the UI at scheduled intervals.
+ * 
+ * @author Sean Connolly
+ */
 public class ScheduledUpdater {
 
 	private static final String TAG = ScheduledUpdater.class.getSimpleName();
@@ -18,15 +23,23 @@ public class ScheduledUpdater {
 	boolean isRunning = false;
 	long mStartTime = 0L;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param mainController
+	 */
 	public ScheduledUpdater(MainController mainController) {
 		this.mainController = mainController;
 		this.mainHandler = mainController.getActivityHandler();
 	}
 
+	/**
+	 * Start polling for updates on neightbors' locations.
+	 */
 	public void start() {
 		if (!isRunning) {
-			isRunning = true;
 			Log.i(TAG, "Starting polling for updates.");
+			setRunning(true);
 			mStartTime = System.currentTimeMillis();
 			mainHandler.removeCallbacks(runnableUpdateTask);
 			mainHandler.postDelayed(runnableUpdateTask, DELAY);
@@ -36,21 +49,35 @@ public class ScheduledUpdater {
 		}
 	}
 
+	/**
+	 * Stop polling for updates on neighbors' locations.
+	 */
 	public void stop() {
 		if (isRunning) {
-			mainHandler.removeCallbacks(runnableUpdateTask);
-			isRunning = false;
 			Log.i(TAG, "Stopping polling for updates.");
+			mainHandler.removeCallbacks(runnableUpdateTask);
+			setRunning(false);
 		} else {
 			Log.e(TAG, "Cannot stop polling for updates,"
 					+ " no instance running.");
 		}
 	}
 
+	/**
+	 * Is the scheduled updater currently running?
+	 * 
+	 * @return true/false if the updater is running
+	 */
 	public boolean isRunning() {
 		return isRunning;
 	}
 
+	/**
+	 * Set if the updater is currently running.
+	 * 
+	 * @param isRunning
+	 *            true/false if the updater is running
+	 */
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}

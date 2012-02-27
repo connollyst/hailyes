@@ -81,7 +81,6 @@ public class MainController {
 	 * Create and initialize the overlay layer
 	 */
 	public void initOverlay() {
-
 		mapOverlay = new AppOverlay(mainActivity.getDrawableMePin(),
 				mainActivity.getDrawableDriverPin(),
 				mainActivity.getDrawablePassengerPin());
@@ -172,6 +171,14 @@ public class MainController {
 		} else {
 			communicator.registerMyself(me);
 		}
+	}
+
+	public void onPause() {
+		scheduledUpdater.stop();
+	}
+
+	public void onResume() {
+		scheduledUpdater.start();
 	}
 
 	/**
