@@ -43,7 +43,8 @@ public class SimpleLocation {
 	}
 
 	public void setLatitude(double latitude) {
-		this.latitude = Long.valueOf(preciseLocationFormatter.format(latitude));
+		this.latitude = Double.valueOf(preciseLocationFormatter
+				.format(latitude));
 	}
 
 	public double getLongitude() {
@@ -51,7 +52,7 @@ public class SimpleLocation {
 	}
 
 	public void setLongitude(double longitude) {
-		this.longitude = Long.valueOf(preciseLocationFormatter
+		this.longitude = Double.valueOf(preciseLocationFormatter
 				.format(longitude));
 	}
 
