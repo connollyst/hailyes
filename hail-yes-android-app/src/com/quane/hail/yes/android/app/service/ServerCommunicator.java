@@ -41,7 +41,7 @@ public class ServerCommunicator {
 
 	private final MainController mainController;
 
-	private DefaultHttpClient httpClient;
+	private DefaultHttpClient httpClient = new DefaultHttpClient();
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -51,7 +51,6 @@ public class ServerCommunicator {
 	 */
 	public ServerCommunicator(final MainController mainController) {
 		this.mainController = mainController;
-		httpClient = new DefaultHttpClient();
 	}
 
 	/**
@@ -74,6 +73,7 @@ public class ServerCommunicator {
 	 */
 	public void registerMyself(final User me) {
 		Log.v(TAG, "Registering myself as searching.");
+		me.setIsSearching(true);
 		sendMessage(ACTION.PUT, me);
 	}
 
@@ -86,6 +86,7 @@ public class ServerCommunicator {
 	 */
 	public void unregisterMyself(final User me) {
 		Log.v(TAG, "Unregistering myself as searching.");
+		me.setIsSearching(false);
 		sendMessage(ACTION.DELETE, me);
 	}
 
