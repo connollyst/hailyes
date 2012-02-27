@@ -19,10 +19,10 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.quane.hail.yes.android.app.ui.MainController;
 import com.quane.hail.yes.resource.StandardsResource;
 import com.quane.hail.yes.user.User;
@@ -43,7 +43,7 @@ public class ServerCommunicator {
 
 	private DefaultHttpClient httpClient;
 
-	private Gson gson = new Gson();
+	private ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * 
@@ -105,8 +105,8 @@ public class ServerCommunicator {
 				try {
 					// Prepare the parameters
 					List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-					queryParams.add(new BasicNameValuePair("user", gson.toJson(
-							me, User.class)));
+					queryParams.add(new BasicNameValuePair("user", mapper
+							.writeValueAsString(me)));
 					queryParams
 							.add(new BasicNameValuePair(
 									StandardsResource.QUERY_PARAMETER_NAMES.COORDINATES_ARE_E6,
@@ -134,7 +134,7 @@ public class ServerCommunicator {
 						String response = httpClient.execute(request,
 								new BasicResponseHandler());
 						Log.v(TAG, "Response=" + response);
-						User[] users = gson.fromJson(response, User[].class);
+						User[] users = mapper.readValue(response, User[].class);
 						mainController.redrawOverlay(Arrays.asList(users));
 					} catch (HttpResponseException re) {
 						switch (re.getStatusCode()) {
@@ -146,7 +146,6 @@ public class ServerCommunicator {
 							throw new Exception(re.getStatusCode() + ": "
 									+ re.getLocalizedMessage(), re);
 						}
-
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

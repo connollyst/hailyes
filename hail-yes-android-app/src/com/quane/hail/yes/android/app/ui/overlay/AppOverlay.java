@@ -59,7 +59,7 @@ public class AppOverlay extends ItemizedOverlay<OverlayItem> {
 				+ " & " + location.getLongitude() + ")");
 		OverlayItem item = new OverlayItem(point, user.getType().toString(),
 				"Snippet");
-		if (user.isMe()) {
+		if (user.getIsMe()) {
 			item.setMarker(mePin);
 		} else if (user.isDriver()) {
 			item.setMarker(driverPin);

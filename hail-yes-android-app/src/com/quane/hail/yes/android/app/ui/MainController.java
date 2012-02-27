@@ -167,7 +167,7 @@ public class MainController {
 	 * 
 	 */
 	public void onHailButtonClick() {
-		if (me.isSearching()) {
+		if (me.getIsSearching()) {
 			communicator.unregisterMyself(me);
 		} else {
 			communicator.registerMyself(me);
